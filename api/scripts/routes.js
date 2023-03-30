@@ -2,7 +2,7 @@ const passport = require('passport');
 const bcrypt = require('bcrypt');
 const dbMan = require('./databaseMan.js');
 
-module.exports = function (app, myDataBase) {
+module.exports = function (app) {
 
     app.route('/login').post(passport.authenticate('local', { failWithError: true }), (req, res) => {
         res.json({"status": "success", "user": req.user});
