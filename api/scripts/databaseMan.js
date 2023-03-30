@@ -87,7 +87,7 @@ const sendMessage = (from, to) => {
 
 const getUser = (username) => {
     User.findOne({username: username}).then((us) => {
-        return {user: us};
+        return {status: "success", user: us};
     }).catch((err) => {
         return {status: "error", message: err, code: '011'};
     });
@@ -95,8 +95,16 @@ const getUser = (username) => {
 
 const getChat = (username, contact) => {
     Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).then((chat) => {
-        return {chat: chat};
+        return {status: "success", chat: chat};
     }).catch((err) => {
         return {status: "error", message: err, code: '012'};
-    })
+    });
+}
+
+const getAllChats = (username) => {
+    Chat.find({$or: [{user1: username}, {user2: username}]}).then((chats) => {
+        return {status: "success", chats: chats};
+    }).catch((err) => {
+        return {status: "error", message: err, code: '013'};
+    });
 }
