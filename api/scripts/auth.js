@@ -3,7 +3,7 @@ const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const dbMan = require('./databaseMan.js');
 
-module.exports = function (app, myDataBase) {
+module.exports = function () {
     passport.serializeUser((user, done) => {
         done(null, user._id);
     });
