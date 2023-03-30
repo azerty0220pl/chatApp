@@ -23,3 +23,17 @@ const chatSchema = new Schema({
 
 const User = mongoose.model("User", userSchema);
 const Chat = mongoose.model("Chat", chatSchema);
+
+const newUser = (req, res) => {
+    User.find({username: req.body.username}).then((doc) => {
+        if(!doc){
+            let user = new User({username: req.body.username, password: req.body.password, profilePhoto: req.body.photo, about: req.body.about});
+            user.save().then((doc) => {
+                res.json({"status": "success", "username": doc.username});
+            }).catch((err) => {
+                res.json({"status": "error", "message": err, "code": "1"});
+            });
+        } else
+            res.json({"status": "error", "message": "User already exists", "code": "2"})
+    });
+}
