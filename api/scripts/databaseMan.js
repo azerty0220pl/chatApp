@@ -24,64 +24,64 @@ const chatSchema = new Schema({
 const User = mongoose.model("User", userSchema);
 const Chat = mongoose.model("Chat", chatSchema);
 
-const newUser = (req, res) => {
-    User.find({username: req.body.username}).then((doc) => {
+const newUser = (username, password, photo, about) => {
+    User.find({username: username}).then((doc) => {
         if(!doc){
-            let user = new User({username: req.body.username, password: req.body.password, profilePhoto: req.body.photo, about: req.body.about});
+            let user = new User({username: username, password: password, profilePhoto: photo, about: about});
             user.save().then((doc) => {
-                res.json({"status": "success", "username": doc.username});
+                return {status: "success", username: doc.username};
             }).catch((err) => {
-                res.json({"status": "error", "message": err, "code": "001"});
+                return {status: "error", message: err, code: "001"};
             });
         } else
-            res.json({"status": "error", "message": "User already exists", "code": "002"})
+            return {status: "error", message: "User already exists", code: "002"};
     });
 }
 
-const sendMessage = (req, res) => {
-    User.findOne({username: req.body.from}).then((sen) => {
+const sendMessage = (from, to) => {
+    User.findOne({username: from}).then((sen) => {
         if(sen) {
-            User.findOne({username: req.body.to}).then((rec) => {
+            User.findOne({username: to}).then((rec) => {
                 if(rec) {
                     Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).then((chat) => {
                         if(!chat) {
                             let x = new Chat({user1: sen.username, user2: rec.username, messages1: [req.body.message], date1: [new Date], messages2: [], date2: []});
                             x.save().then((doc) => {
-                                res.json({"status": "success"});
+                                return {status: "success"};
                             }).catch((err) => {
-                                res.json({"status": "error", "message": err, "code": "003"});
+                                return {status: "error", message: err, code: "003"};
                             });
                         } else {
                             if(sen.username == chat.user1) {
                                 chat.messages1.push(req.body.message);
                                 chat.date1.push(new Date);
                                 chat.save().then((doc) => {
-                                    res.json({"status": "success"})
+                                    return {status: "success"};
                                 }).catch((err) => {
-                                    res.json({"status": "error", "message": err, "code": "004"});
+                                    return {status: "error", message: err, code: "004"};
                                 });
                             } else {
                                 chat.messages2.push(req.body.message);
                                 chat.date2.push(new Date);
                                 chat.save().then((doc) => {
-                                    res.json({"status": "success"})
+                                    return {status: "success"};
                                 }).catch((err) => {
                                     res.json({"status": "error", "message": err, "code": "005"});
                                 });
                             }
                         }
                     }).catch((err) => {
-                        res.json({"status": "error", "message": err, "code": "006"});
+                        return {status: "error", message: err, code: 006};
                     });
                 } else
-                    res.json({"status": "error", "message": "Receiver does not exist.", "code": "007"})
+                    return {status: "error", message: "Receiver does not exist.", code: "007"};
             }).catch((err) => {
-                res.json({"status": "error", "message": err, "code": "008"});
+                return {status: "error", message: err, code: "008"};
             });
         } else
-            res.json({"status": "error", "message": "Sender does not exist.", "code": "009"})
+            return {status: "error", message: "Sender does not exist.", code: "009"};
     }).catch((err) => {
-        res.json({"status": "error", "message": err, "code": "010"});
+        return {status: "error", message: err, code: "010"};
     });
 }
 
