@@ -92,3 +92,11 @@ const getUser = (username) => {
         return {status: "error", message: err, code: '011'};
     });
 }
+
+const getChat = (username, contact) {
+    Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).then((chat) => {
+        return {chat: chat};
+    }).catch((err) => {
+        return {status: "error", message: err, code: '012'};
+    })
+}
