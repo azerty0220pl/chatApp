@@ -38,14 +38,14 @@ const newUser = (username, password, photo, about) => {
     });
 }
 
-const sendMessage = (from, to) => {
+const sendMessage = (from, to, message) => {
     User.findOne({username: from}).then((sen) => {
         if(sen) {
             User.findOne({username: to}).then((rec) => {
                 if(rec) {
                     Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).then((chat) => {
                         if(!chat) {
-                            let x = new Chat({user1: sen.username, user2: rec.username, messages1: [req.body.message], date1: [new Date], messages2: [], date2: []});
+                            let x = new Chat({user1: sen.username, user2: rec.username, messages1: [message], date1: [new Date], messages2: [], date2: []});
                             x.save().then((doc) => {
                                 return {status: "success"};
                             }).catch((err) => {
@@ -53,7 +53,7 @@ const sendMessage = (from, to) => {
                             });
                         } else {
                             if(sen.username == chat.user1) {
-                                chat.messages1.push(req.body.message);
+                                chat.messages1.push(message);
                                 chat.date1.push(new Date);
                                 chat.save().then((doc) => {
                                     return {status: "success"};
@@ -61,7 +61,7 @@ const sendMessage = (from, to) => {
                                     return {status: "error", message: err, code: "004"};
                                 });
                             } else {
-                                chat.messages2.push(req.body.message);
+                                chat.messages2.push(message);
                                 chat.date2.push(new Date);
                                 chat.save().then((doc) => {
                                     return {status: "success"};
