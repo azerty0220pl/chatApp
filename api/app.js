@@ -1,15 +1,16 @@
 const express = require('express');
-const app = express();
-const http = require('http');
-const cors = require('cors');
-const passportSocketIo = require('passport.socketio');
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
-const { Server } = require('socket.io');
-const dbMan = require('./scripts/databaseMan.js');
-const auth = require('./scripts/auth.js');
-const routes = require('./scripts/routes.js');
+const  http =  require('http');
+const  cors =  require('cors');
+const  passportSocketIo =  require('passport.socketio');
+const  session =  require('express-session');
+const  cookieParser =  require('cookie-parser');
+const { Server } =  require('socket.io');
+const dbMan =  require('./scripts/databaseMan.js');
+const auth =  require('./scripts/auth.js');
+const routes =  require('./scripts/routes.js');
+const passport =  require('passport');
 
+const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -24,8 +25,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   cookie: { secure: false },
-  key: 'express.sid',
-  store: store
+  key: 'express.sid'
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -37,15 +37,15 @@ io.use(
     cookieParser: cookieParser,
     key: 'express.sid',
     secret: process.env.SESSION_SECRET,
-    store: store,
     success: onAuthorizeSuccess,
     fail: onAuthorizeFail
   })
 );
 
-dbMan.connect.then(() => {
-  auth();
-  routes(app);
+dbMan.connect().then(() => {
+  console.log("connected to database");
+  auth.auth();
+  routes.routes(app);
 
   io.on('connection', (socket) => {
 
