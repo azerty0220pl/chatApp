@@ -24,7 +24,17 @@ Chat = mongoose.model("Chat", chatSchema);
 
 module.exports = {
     connect: function() {
-        return mongoose.connect(process.env['MONGO_URI'], { useNewUrlParser: true, useUnifiedTopology: true })
+        let res = mongoose.connect(process.env['MONGO_URI'], { useNewUrlParser: true, useUnifiedTopology: true });
+        let query = User.find({username: "hello"});
+        console.log(User);
+        console.log(query);
+        query.exec().then(doc => {
+            console.log("doc", doc);
+        }).catch(err => {
+            console.log("error", err);
+        });
+        console.log(query);
+        return res;
     },
     newUser: function(username, password, photo, about) {
         User.find({username: username}).then((doc) => {
@@ -91,6 +101,9 @@ module.exports = {
         console.log(query);
         console.log(query.exec());
         console.log(query);
+        console.log(query.then(doc => {
+            console.log(doc);
+        }))
         User.findOne({username: username}).then((us) => {
             return {status: "success", user: us};
         }).catch((err) => {
@@ -105,7 +118,6 @@ module.exports = {
         }).catch((err) => {
             return {status: "error", message: err, code: '012'};
         });
-        return {status: "error", message: "chat not found", code: '011'};
     },
     getAllChats: function(username) {
         Chat.find({$or: [{user1: username}, {user2: username}]}).then((chats) => {
@@ -113,6 +125,5 @@ module.exports = {
         }).catch((err) => {
             return {status: "error", message: err, code: '013'};
         });
-        return {status: "error", message: "chats not found", code: '011'};
     }
 }
