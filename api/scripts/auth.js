@@ -3,7 +3,7 @@ const LocalStrategy = require('passport-local');
 const dbMan = require('./databaseMan.js');
 
 module.exports = {
-    auth: function() {
+    auth: function(db) {
         passport.serializeUser((user, done) => {
             done(null, user._id);
         });
@@ -14,7 +14,7 @@ module.exports = {
 
         passport.use(new LocalStrategy((username, password, done) => {
             console.log("localStrategy");
-            let user = dbMan.getUser(username);
+            let user = dbMan.getUser(username, db);
             console.log(user);
             if(user.status == 'error')
                 return done(user.message);

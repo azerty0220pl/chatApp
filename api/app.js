@@ -44,9 +44,9 @@ io.use(
   })
 );
 
-dbMan.connect().then(() => {
+dbMan.connect().then((db) => {
   console.log("connected to database");
-  auth.auth();
+  auth.auth(db);
   routes.routes(app);
 
   io.on('connection', (socket) => {

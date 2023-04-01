@@ -85,15 +85,15 @@ module.exports = {
             return {status: "error", message: err, code: "010"};
         });
     },
-    getUser: function(username) {
+    getUser: function(username, db) {
         console.log(User);
-        User.findOne({username: username}).then((us) => {
+        db.collection('users').findOne({username: username}).then((us) => {
             return {status: "success", user: us};
         }).catch((err) => {
             console.log("catch");
             return {status: "error", message: err, code: '011'};
         });
-        return {status: "error", message: "user not found", code: '011'};
+        return {status: "error", message: "who knows", code: '011'};
     },
     getChat: function(username, contact) {
         Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).then((chat) => {
