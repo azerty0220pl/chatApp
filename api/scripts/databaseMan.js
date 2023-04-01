@@ -86,11 +86,15 @@ module.exports = {
         });
     },
     getUser: function(username) {
+        console.log("Get User");
         User.findOne({username: username}).exec().then((us) => {
+            console.log("then");
             return {status: "success", user: us};
         }).catch((err) => {
+            console.log("catch");
             return {status: "error", message: err, code: '011'};
         });
+        console.log("neither then nor cath");
     },
     getChat: function(username, contact) {
         Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).exec().then((chat) => {
