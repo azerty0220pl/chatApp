@@ -92,7 +92,7 @@ class dbMan {
 
     async getUser(username) {
         console.log("getUser")
-        this.User.findOne({username: username}).then((us) => {
+        await this.User.findOne({username: username}).then((us) => {
             console.log("then");
             let res = {status: "success", user: us};
             console.log(res);
