@@ -85,10 +85,12 @@ module.exports = {
             return {status: "error", message: err, code: "010"};
         });
     },
-    getUser: function(username, db) {
+    getUser: function(username) {
+        let query = User.findOne({username: username});
         console.log(User);
-        console.log(User.findOne({username: username}));
-        console.log(User.findOne({username: username}).exec());
+        console.log(query);
+        console.log(query.exec());
+        console.log(query);
         User.findOne({username: username}).then((us) => {
             return {status: "success", user: us};
         }).catch((err) => {
