@@ -10,14 +10,20 @@ module.exports = {
             res.json({"status": "error", "message": err, "code": "101"});
         });
 
-        app.route('/register').post((req, res, next) => {
-            let x = db.newUser(req.body.username, req.body.password, req.body.photo, req.body.about);
-            res.json(x);
+        app.route('/register').post((req, res) => {
+            db.newUser(req.body.username, req.body.password, req.body.photo, req.body.about).then(x => {
+                res.json(x);
+            }).catch(err => {
+                res.json({"status": "error", "message": err, "code": "102"});
+            })
         });
 
         app.route('/chats').get(ensureAuthenticated, (req, res) => {
-            let x = db.getAllChats(req.user.username);
-            res.json(x);
+            db.getAllChats(req.user.username).then(x => {
+                res.json(x);
+            }).catch(err => {
+                res.json({"status": "error", "message": err, "code": "103"});
+            });
         })
 
         app.use((req, res, next) => {
@@ -30,5 +36,6 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.json({"status": "error", "message": "No user authenticated", "code": "102"});
+    res.json({"status": "error", "message": "No user authenticated", "code": "104"});
+    return next();
 };

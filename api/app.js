@@ -60,9 +60,12 @@ db.connect().then(() => {
     }
 
     io.on('message', (data) => {
-      let x = dbMan.sendMessage(data.from, data.to, data.message);
-      socket.emit('sent', {status: x.status});
-      io.to(data.to).emit('message', data);
+      db.sendMessage(data.from, data.to, data.message).then(x => {
+        socket.emit('sent', {status: x.status});
+        io.to(data.to).emit('message', data);
+      }).catch(err => {
+        socket.emit('not sent', {status: "error", message: err});
+      });
     });
   });
 }).catch((err) => {
