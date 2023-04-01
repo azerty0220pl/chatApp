@@ -19,9 +19,9 @@ module.exports = {
                     return done(x.message);
                 if (!x.user)
                     return done(null, false);
-                if (password != x.password)
+                if (password != x.user.password)
                     return done(null, false);
-                return done(null, user);
+                return done(null, x.user);
             }).catch(err => {
                 console.log("error");
                 return done(null, false);
