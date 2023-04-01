@@ -102,7 +102,7 @@ class dbMan {
             console.log("catch");
             x = {status: "error", message: err, code: '011'};
         });
-        console.log("after promise")
+        console.log("after promise");
         while(!x){}
         return x;
     }
