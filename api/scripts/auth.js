@@ -18,7 +18,7 @@ module.exports = {
             console.log(user);
             if(user.status == 'error')
                 return done(user.message);
-            if (!user)
+            if (!user.user)
                 return done(null, false);
             if (password != user.password)
                 return done(null, false);
