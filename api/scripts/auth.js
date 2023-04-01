@@ -13,7 +13,7 @@ module.exports = {
 
         passport.use(new LocalStrategy((username, password, done) => {
             console.log("localStrategy");
-            let x = async () => await db.getUser(username);
+            let x = db.getUser(username);
             console.log("returned", x);
             if(x.status == 'error')
                 return done(x.message);

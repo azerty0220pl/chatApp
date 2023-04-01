@@ -91,15 +91,19 @@ class dbMan {
     }
 
     getUser(username) {
+        let x = null;
         this.User.findOne({username: username}).then((us) => {
             console.log("then");
             let res = {status: "success", user: us};
             console.log(res);
-            return res;
+            x = res;
         }).catch((err) => {
             console.log("catch");
-            return {status: "error", message: err, code: '011'};
+            x = {status: "error", message: err, code: '011'};
         });
+
+        while(!x){}
+        return x;
     }
 
     getChat(username, contact) {
