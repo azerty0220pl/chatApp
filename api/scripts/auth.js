@@ -13,13 +13,13 @@ module.exports = {
 
         passport.use(new LocalStrategy((username, password, done) => {
             console.log("localStrategy");
-            let x = db.getUser(username);
+            let x = async () => await db.getUser(username);
             console.log("returned", x);
-            if(user.status == 'error')
-                return done(user.message);
-            if (!user.user)
+            if(x.status == 'error')
+                return done(x.message);
+            if (!x.user)
                 return done(null, false);
-            if (password != user.password)
+            if (password != x.password)
                 return done(null, false);
             return done(null, user);
         }));
