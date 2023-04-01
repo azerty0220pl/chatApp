@@ -11,9 +11,9 @@ module.exports = {
             done(null, db.getUser(id).user);
         });
 
-        passport.use(new LocalStrategy((username, password, done) => {
+        passport.use(new LocalStrategy(async (username, password, done) => {
             console.log("localStrategy");
-            let x = db.getUser(username);
+            let x = await db.getUser(username);
             console.log("returned", x);
             if(x.status == 'error')
                 return done(x.message);

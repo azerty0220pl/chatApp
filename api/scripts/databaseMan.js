@@ -92,23 +92,16 @@ class dbMan {
 
     getUser(username) {
         console.log("getUser")
-        let x = null;
-        this.User.findOne({username: username}).then((doc) => {
-            console.log(doc);
-        }).catch((err) => {
-            console.log(err);
-        });
         this.User.findOne({username: username}).then((us) => {
             console.log("then");
             let res = {status: "success", user: us};
             console.log(res);
-            x = res;
+            return res;
         }).catch((err) => {
             console.log("catch");
-            x = {status: "error", message: err, code: '011'};
+            return {status: "error", message: err, code: '011'};
         });
         console.log("after promise");
-        return x;
     }
 
     getChat(username, contact) {
