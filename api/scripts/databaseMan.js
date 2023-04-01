@@ -27,7 +27,7 @@ module.exports = {
         return mongoose.connect(process.env['MONGO_URI'], { useNewUrlParser: true, useUnifiedTopology: true })
     },
     newUser: function(username, password, photo, about) {
-        User.find({username: username}).exec().then((doc) => {
+        User.find({username: username}).then((doc) => {
             if(!doc){
                 let user = new User({username: username, password: password, profilePhoto: photo, about: about});
                 user.save().then((doc) => {
@@ -40,9 +40,9 @@ module.exports = {
         });
     },
     sendMessage: function(from, to, message) {
-        User.findOne({username: from}).exec().then((sen) => {
+        User.findOne({username: from}).then((sen) => {
             if(sen) {
-                User.findOne({username: to}).exec().then((rec) => {
+                User.findOne({username: to}).then((rec) => {
                     if(rec) {
                         Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).exec().then((chat) => {
                             if(!chat) {
@@ -86,28 +86,29 @@ module.exports = {
         });
     },
     getUser: function(username) {
-        console.log("Get User");
-        User.findOne({username: username}).exec().then((us) => {
-            console.log("then");
+        console.log(User);
+        User.findOne({username: username}).then((us) => {
             return {status: "success", user: us};
         }).catch((err) => {
             console.log("catch");
             return {status: "error", message: err, code: '011'};
         });
-        console.log("neither then nor cath");
+        return {status: "error", message: "user not found", code: '011'};
     },
     getChat: function(username, contact) {
-        Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).exec().then((chat) => {
+        Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).then((chat) => {
             return {status: "success", chat: chat};
         }).catch((err) => {
             return {status: "error", message: err, code: '012'};
         });
+        return {status: "error", message: "chat not found", code: '011'};
     },
     getAllChats: function(username) {
-        Chat.find({$or: [{user1: username}, {user2: username}]}).exec().then((chats) => {
+        Chat.find({$or: [{user1: username}, {user2: username}]}).then((chats) => {
             return {status: "success", chats: chats};
         }).catch((err) => {
             return {status: "error", message: err, code: '013'};
         });
+        return {status: "error", message: "chats not found", code: '011'};
     }
 }
