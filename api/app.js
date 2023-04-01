@@ -44,7 +44,7 @@ io.use(
   })
 );
 
-db = new dbMan();
+db = new dbMan.dbMan();
 db.connect().then(() => {
   console.log("connected to database");
   auth.auth(db);
