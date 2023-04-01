@@ -93,6 +93,11 @@ class dbMan {
     getUser(username) {
         console.log("getUser")
         let x = null;
+        this.User.findOne({username: username}).then((doc) => {
+            console.log(doc);
+        }).catch((err) => {
+            console.log(err);
+        });
         this.User.findOne({username: username}).then((us) => {
             console.log("then");
             let res = {status: "success", user: us};
@@ -103,7 +108,6 @@ class dbMan {
             x = {status: "error", message: err, code: '011'};
         });
         console.log("after promise");
-        while(!x){}
         return x;
     }
 
