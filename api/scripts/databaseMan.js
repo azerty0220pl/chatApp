@@ -30,9 +30,9 @@ class dbMan {
     }
 
     newUser(username, password, photo, about) {
-        User.find({username: username}).then((doc) => {
+        this.User.find({username: username}).then((doc) => {
             if(!doc){
-                let user = new User({username: username, password: password, profilePhoto: photo, about: about});
+                let user = new this.User({username: username, password: password, profilePhoto: photo, about: about});
                 user.save().then((doc) => {
                     return {status: "success", username: doc.username};
                 }).catch((err) => {
@@ -44,13 +44,13 @@ class dbMan {
     }
 
     sendMessage(from, to, message) {
-        User.findOne({username: from}).then((sen) => {
+        this.User.findOne({username: from}).then((sen) => {
             if(sen) {
-                User.findOne({username: to}).then((rec) => {
+                this.User.findOne({username: to}).then((rec) => {
                     if(rec) {
-                        Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).exec().then((chat) => {
+                        this.Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).exec().then((chat) => {
                             if(!chat) {
-                                let x = new Chat({user1: sen.username, user2: rec.username, messages1: [message], date1: [new Date], messages2: [], date2: []});
+                                let x = new this.Chat({user1: sen.username, user2: rec.username, messages1: [message], date1: [new Date], messages2: [], date2: []});
                                 x.save().then((doc) => {
                                     return {status: "success"};
                                 }).catch((err) => {
@@ -91,10 +91,10 @@ class dbMan {
     }
 
     getUser(username) {
-        let query = User.findOne({username: username});
+        let query = this.User.findOne({username: username});
         console.log(query);
         query.exec().then(doc => {console.log(doc)});
-        User.findOne({username: username}).then((us) => {
+        this.User.findOne({username: username}).then((us) => {
             return {status: "success", user: us};
         }).catch((err) => {
             console.log("catch");
@@ -104,7 +104,7 @@ class dbMan {
     }
 
     getChat(username, contact) {
-        Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).then((chat) => {
+        this.Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).then((chat) => {
             return {status: "success", chat: chat};
         }).catch((err) => {
             return {status: "error", message: err, code: '012'};
@@ -112,7 +112,7 @@ class dbMan {
     }
 
     getAllChats(username) {
-        Chat.find({$or: [{user1: username}, {user2: username}]}).then((chats) => {
+        this.Chat.find({$or: [{user1: username}, {user2: username}]}).then((chats) => {
             return {status: "success", chats: chats};
         }).catch((err) => {
             return {status: "error", message: err, code: '013'};
