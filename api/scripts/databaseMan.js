@@ -90,10 +90,8 @@ class dbMan {
         });
     }
 
-    getUser(username) {
-        let query = this.User.findOne({username: username});
-        query.exec().then(doc => {console.log("doc", doc)});
-        this.User.findOne({username: username}).then((us) => {
+    async getUser(username) {
+        await this.User.findOne({username: username}).then((us) => {
             console.log("then");
             return {status: "success", user: us};
         }).catch((err) => {
