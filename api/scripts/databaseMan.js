@@ -92,14 +92,15 @@ class dbMan {
 
     getUser(username) {
         let query = this.User.findOne({username: username});
-        console.log(query);
-        query.exec().then(doc => {console.log(doc)});
+        query.exec().then(doc => {console.log("doc", doc)});
         this.User.findOne({username: username}).then((us) => {
+            console.log("then");
             return {status: "success", user: us};
         }).catch((err) => {
             console.log("catch");
             return {status: "error", message: err, code: '011'};
         });
+        console.log("BROKEN");
         return {status: "error", message: "who knows", code: '011'};
     }
 

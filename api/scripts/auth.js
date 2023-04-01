@@ -14,7 +14,7 @@ module.exports = {
         passport.use(new LocalStrategy((username, password, done) => {
             console.log("localStrategy");
             let user = db.getUser(username);
-            console.log(user);
+            console.log("returned", user);
             if(user.status == 'error')
                 return done(user.message);
             if (!user.user)
