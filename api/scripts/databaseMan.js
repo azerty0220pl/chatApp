@@ -87,7 +87,9 @@ module.exports = {
     },
     getUser: function(username, db) {
         console.log(User);
-        db.collection('users').findOne({username: username}).then((us) => {
+        console.log(User.findOne({username: username}));
+        console.log(User.findOne({username: username}).exec());
+        User.findOne({username: username}).then((us) => {
             return {status: "success", user: us};
         }).catch((err) => {
             console.log("catch");
