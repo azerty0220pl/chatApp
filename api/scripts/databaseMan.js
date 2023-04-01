@@ -91,17 +91,18 @@ class dbMan {
     }
 
     async getUser(username) {
-        console.log("getUser")
+        console.log("getUser");
+        let res = null;
         await this.User.findOne({username: username}).then((us) => {
             console.log("then");
-            let res = {status: "success", user: us};
+            res = {status: "success", user: us};
             console.log(res);
-            return res;
         }).catch((err) => {
             console.log("catch");
-            return {status: "error", message: err, code: '011'};
+            res = {status: "error", message: err, code: '011'};
         });
         console.log("after promise");
+        return res;
     }
 
     getChat(username, contact) {
