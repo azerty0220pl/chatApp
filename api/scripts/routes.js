@@ -1,8 +1,7 @@
 const passport = require('passport');
-const dbMan = require('./databaseMan.js');
 
 module.exports = {
-    routes: function (app) {
+    routes: function (app, db) {
 
         app.route('/login').post(passport.authenticate('local', { failWithError: true }), (req, res) => {
             console.log("/login")
@@ -12,12 +11,12 @@ module.exports = {
         });
 
         app.route('/register').post((req, res, next) => {
-            let x = dbMan.newUser(req.body.username, req.body.password, req.body.photo, req.body.about);
+            let x = db.newUser(req.body.username, req.body.password, req.body.photo, req.body.about);
             res.json(x);
         });
 
         app.route('/chats').get(ensureAuthenticated, (req, res) => {
-            let x = dbMan.getAllChats(req.user.username);
+            let x = db.getAllChats(req.user.username);
             res.json(x);
         })
 

@@ -44,10 +44,11 @@ io.use(
   })
 );
 
-dbMan.connect().then(() => {
+db = new dbMan();
+db.connect().then(() => {
   console.log("connected to database");
-  auth.auth();
-  routes.routes(app);
+  auth.auth(db);
+  routes.routes(app, db);
 
   io.on('connection', (socket) => {
 
