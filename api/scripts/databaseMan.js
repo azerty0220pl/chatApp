@@ -100,8 +100,6 @@ class dbMan {
             console.log("catch");
             return {status: "error", message: err, code: '011'};
         });
-        console.log("BROKEN");
-        return {status: "error", message: "who knows", code: '011'};
     }
 
     getChat(username, contact) {
