@@ -12,10 +12,7 @@ module.exports = {
         });
 
         passport.use(new LocalStrategy((username, password, done) => {
-            console.log("localStrategy");
             db.getUser(username).then(x => {
-                console.log("returned", x);
-                console.log(x.user.password, password);
                 if(x.status == 'error')
                     return done(x.message);
                 if (!x.user)
@@ -24,7 +21,6 @@ module.exports = {
                     return done(null, false);
                 return done(null, x.user);
             }).catch(err => {
-                console.log("error");
                 return done(null, false);
             });
         }));

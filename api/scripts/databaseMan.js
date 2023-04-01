@@ -29,96 +29,101 @@ class dbMan {
         return mongoose.connect(process.env['MONGO_URI'], { useNewUrlParser: true, useUnifiedTopology: true });
     }
 
-    newUser(username, password, photo, about) {
-        this.User.find({username: username}).then((doc) => {
+    async newUser(username, password, photo, about) {
+        let res = null;
+        await this.User.find({username: username}).then(async (doc) => {
             if(!doc){
                 let user = new this.User({username: username, password: password, profilePhoto: photo, about: about});
-                user.save().then((doc) => {
-                    return {status: "success", username: doc.username};
+                await user.save().then((doc) => {
+                    res = {status: "success", username: doc.username};
                 }).catch((err) => {
-                    return {status: "error", message: err, code: "001"};
+                    res = {status: "error", message: err, code: "001"};
                 });
             } else
-                return {status: "error", message: "User already exists", code: "002"};
+                res = {status: "error", message: "User already exists", code: "002"};
+        }).catch(err => {
+            res = {status: "error", message: err, code: "003"};
         });
+        return res;
     }
 
-    sendMessage(from, to, message) {
-        this.User.findOne({username: from}).then((sen) => {
+    async sendMessage(from, to, message) {
+        let res = null;
+        await this.User.findOne({username: from}).then(async (sen) => {
             if(sen) {
-                this.User.findOne({username: to}).then((rec) => {
+                await this.User.findOne({username: to}).then(async (rec) => {
                     if(rec) {
-                        this.Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).exec().then((chat) => {
+                        await this.Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).then(async (chat) => {
                             if(!chat) {
                                 let x = new this.Chat({user1: sen.username, user2: rec.username, messages1: [message], date1: [new Date], messages2: [], date2: []});
-                                x.save().then((doc) => {
-                                    return {status: "success"};
+                                await x.save().then((doc) => {
+                                    res = {status: "success"};
                                 }).catch((err) => {
-                                    return {status: "error", message: err, code: "003"};
+                                    res = {status: "error", message: err, code: "004"};
                                 });
                             } else {
                                 if(sen.username == chat.user1) {
                                     chat.messages1.push(message);
                                     chat.date1.push(new Date);
-                                    chat.save().then((doc) => {
-                                        return {status: "success"};
+                                    await chat.save().then((doc) => {
+                                        res = {status: "success"};
                                     }).catch((err) => {
-                                        return {status: "error", message: err, code: "004"};
+                                        res = {status: "error", message: err, code: "005"};
                                     });
                                 } else {
                                     chat.messages2.push(message);
                                     chat.date2.push(new Date);
-                                    chat.save().then((doc) => {
-                                        return {status: "success"};
+                                    await chat.save().then((doc) => {
+                                        res = {status: "success"};
                                     }).catch((err) => {
-                                        res.json({"status": "error", "message": err, "code": "005"});
+                                        res = {"status": "error", "message": err, "code": "006"};
                                     });
                                 }
                             }
                         }).catch((err) => {
-                            return {status: "error", message: err, code: "006"};
+                            res = {status: "error", message: err, code: "007"};
                         });
                     } else
-                        return {status: "error", message: "Receiver does not exist.", code: "007"};
+                        res = {status: "error", message: "Receiver does not exist.", code: "008"};
                 }).catch((err) => {
-                    return {status: "error", message: err, code: "008"};
+                    res = {status: "error", message: err, code: "009"};
                 });
             } else
-                return {status: "error", message: "Sender does not exist.", code: "009"};
+                res = {status: "error", message: "Sender does not exist.", code: "010"};
         }).catch((err) => {
-            return {status: "error", message: err, code: "010"};
+            res = {status: "error", message: err, code: "011"};
         });
-    }
-
-    async getUser(username) {
-        console.log("getUser");
-        let res = null;
-        await this.User.findOne({username: username}).then((us) => {
-            console.log("then");
-            res = {status: "success", user: us};
-            console.log(res);
-        }).catch((err) => {
-            console.log("catch");
-            res = {status: "error", message: err, code: '011'};
-        });
-        console.log("after promise");
         return res;
     }
 
-    getChat(username, contact) {
-        this.Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).then((chat) => {
-            return {status: "success", chat: chat};
+    async getUser(username) {
+        let res = null;
+        await this.User.findOne({username: username}).then((us) => {
+            res = {status: "success", user: us};
         }).catch((err) => {
-            return {status: "error", message: err, code: '012'};
+            res = {status: "error", message: err, code: '012'};
         });
+        return res;
     }
 
-    getAllChats(username) {
-        this.Chat.find({$or: [{user1: username}, {user2: username}]}).then((chats) => {
+    async getChat(username, contact) {
+        let res = null;
+        await this.Chat.findOne({$or: [{user1: username, user2: contact}, {user1: contact, user2: username}]}).then((chat) => {
+            res = {status: "success", chat: chat};
+        }).catch((err) => {
+            res = {status: "error", message: err, code: '013'};
+        });
+        return res;
+    }
+
+    async getAllChats(username) {
+        let res = null;
+        await this.Chat.find({$or: [{user1: username}, {user2: username}]}).then((chats) => {
             return {status: "success", chats: chats};
         }).catch((err) => {
-            return {status: "error", message: err, code: '013'};
+            return {status: "error", message: err, code: '014'};
         });
+        return res;
     }
 }
 

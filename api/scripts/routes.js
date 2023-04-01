@@ -3,7 +3,7 @@ const passport = require('passport');
 module.exports = {
     routes: function (app, db) {
 
-        app.route('/login').post(passport.authenticate('local', { failWithError: true }), (req, res) => {
+        app.route('/login').post(passport.authenticate('local', { failRedirect: "/failedLogin" }), (req, res) => {
             console.log("/login")
             res.json({"status": "success", "user": req.user});
         }, (err, req, res) => {
@@ -18,11 +18,15 @@ module.exports = {
             })
         });
 
+        app.route("/failedLogin").get((req, res) => {
+            res.json({"status": "error", "message": "Couldn't log in", "code": "103"});
+        })
+
         app.route('/chats').get(ensureAuthenticated, (req, res) => {
             db.getAllChats(req.user.username).then(x => {
                 res.json(x);
             }).catch(err => {
-                res.json({"status": "error", "message": err, "code": "103"});
+                res.json({"status": "error", "message": err, "code": "104"});
             });
         })
 
@@ -36,6 +40,6 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.json({"status": "error", "message": "No user authenticated", "code": "104"});
+    res.json({"status": "error", "message": "No user authenticated", "code": "105"});
     return next();
 };
