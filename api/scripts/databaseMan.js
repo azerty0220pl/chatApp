@@ -90,7 +90,7 @@ class dbMan {
         });
     }
 
-    getUser(username) {
+    async getUser(username) {
         console.log("getUser")
         this.User.findOne({username: username}).then((us) => {
             console.log("then");
