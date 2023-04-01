@@ -97,13 +97,8 @@ module.exports = {
     },
     getUser: function(username) {
         let query = User.findOne({username: username});
-        console.log(User);
         console.log(query);
-        console.log(query.exec());
-        console.log(query);
-        console.log(query.then(doc => {
-            console.log(doc);
-        }))
+        query.exec().then(doc => {console.log(doc)});
         User.findOne({username: username}).then((us) => {
             return {status: "success", user: us};
         }).catch((err) => {
