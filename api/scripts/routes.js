@@ -5,9 +5,10 @@ module.exports = {
     routes: function (app) {
 
         app.route('/login').post(passport.authenticate('local', { failWithError: true }), (req, res) => {
+            console.log("/login")
             res.json({"status": "success", "user": req.user});
         }, (err, req, res) => {
-        res.json({"status": "error", "message": err, "code": "101"});
+            res.json({"status": "error", "message": err, "code": "101"});
         });
 
         app.route('/register').post((req, res, next) => {
