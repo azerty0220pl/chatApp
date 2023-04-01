@@ -13,18 +13,15 @@ module.exports = {
 
         passport.use(new LocalStrategy((username, password, done) => {
             console.log("localStrategy");
-            db.getUser(username).then(x => {
-                console.log("returned", x);
-                if(user.status == 'error')
-                    return done(user.message);
-                if (!user.user)
-                    return done(null, false);
-                if (password != user.password)
-                    return done(null, false);
-                return done(null, user);
-            }).catch(err => {
-                return done(err);
-            })
+            let x = db.getUser(username);
+            console.log("returned", x);
+            if(user.status == 'error')
+                return done(user.message);
+            if (!user.user)
+                return done(null, false);
+            if (password != user.password)
+                return done(null, false);
+            return done(null, user);
         }));
     }
 }
