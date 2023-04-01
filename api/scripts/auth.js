@@ -15,6 +15,7 @@ module.exports = {
             console.log("localStrategy");
             db.getUser(username).then(x => {
                 console.log("returned", x);
+                console.log(x.user.password, password);
                 if(x.status == 'error')
                     return done(x.message);
                 if (!x.user)
