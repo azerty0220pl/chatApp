@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 
 module.exports = {
-    db: class {
+    dbMan: class {
         constructor() {
             this.Schema = mongoose.Schema;
     
