@@ -11,7 +11,7 @@ module.exports = {
             done(null, db.getUser(id).user);
         });
 
-        passport.use(new LocalStrategy(async (username, password, done) => {
+        passport.use(new LocalStrategy((username, password, done) => {
             console.log("localStrategy");
             db.getUser(username).then(x => {
                 console.log("returned", x);
@@ -22,6 +22,9 @@ module.exports = {
                 if (password != x.password)
                     return done(null, false);
                 return done(null, user);
+            }).catch(err => {
+                console.log("error");
+                return done(null, false);
             });
         }));
     }
