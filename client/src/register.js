@@ -1,26 +1,101 @@
 import React from "react";
+import bcrypt from 'bcryptjs-react';
 
 class Register extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+            rePassword: '',
+            error: false,
+            passEq: true
+        };
+        this.handleRegister = this.handleRegister.bind(this);
+        this.onUserChange = this.onUserChange.bind(this);
+        this.onPassChange = this.onPassChange.bind(this);
+        this.onRePassChange = this.onRePassChange.bind(this);
+    }
+
+    onUserChange (e) {
+        this.setState({username: e.target.value});
+    }
+
+    onPassChange (e) {
+        this.setState({
+            password: e.target.value,
+            passEq: e.target.value === this.state.rePassword
+        });
+    }
+
+    onRePassChange (e) {
+        this.setState({
+            rePassword: e.target.value,
+            passEq: e.target.value === this.state.password
+        });
+    }
+
+    async handleRegister (e) {
+        console.log("handleLogin");
+        let user = this.state.username;
+        let password = this.state.password;
+        
+        e.target.className = "btn btn-success w-50 my-2 disabled"
+
+        if(this.state.password === this.state.rePassword) {
+            let hashedPassword = await bcrypt.hash(password, parseInt(user + 'randomValuexD' + user));
+            console.log("hashed password ", hashedPassword);
+            await fetch('https://chatapp-api-6dvw.onrender.com/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: user,
+                    password: hashedPassword
+                })
+            }).then(res => res.json()).then(data => {
+                if(data.status === "success") {
+                    this.setState({
+                        username: '',
+                        password: '',
+                        rePassword: '',
+                        error: false
+                    });
+                    console.log('success', data.user);
+                } else {
+                    this.setState({error: true});
+                    console.log('error', data.message);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+
+        e.target.className = "btn btn-success w-50 my-2"
+    }
     render() {
         return (
             <div className="d-flex flex-column align-items-center">
                 <h3 className="text-center">Register:</h3>
-                <form className="d-flex flex-column align-items-center">
+                <div className="d-flex flex-column align-items-center">
                     <div>
-                        <label className="form-label" for="newUsername">Username:</label>
-                        <input type="text" id="newUsername" className="form-control" />
-                        <p id="emailHelp" class="form-text">Must be unique</p>
+                        <label className="form-label" htmlFor="newUsername">Username:</label>
+                        <input type="text" id="newUsername" className="form-control" onChange={this.onUserChange} />
+                        <p className={"form-text" + (this.state.error ? " text-danger" : "")}>Must be unique</p>
                     </div>
                     <div>
-                        <label className="form-label" for="newPassword">Password:</label>
-                        <input type="password" id="newPassword" className="form-control" />
+                        <label className="form-label" htmlFor="newPassword">Password:</label>
+                        <input type="password" id="newPassword" className="form-control" onChange={this.onPassChange} />
+                        <p className="form-text">Should be a strong one</p>
                     </div>
                     <div>
-                        <label className="form-label" for="passwordRep">Repeat password:</label>
-                        <input type="password" id="passwordRep" className="form-control" />
+                        <label className="form-label" htmlFor="passwordRep">Repeat password:</label>
+                        <input type="password" id="passwordRep" className="form-control" onChange={this.onRePassChange} />
+                        <p className="form-text text-danger">{this.state.passEq ? '' : 'Password must match'}</p>
                     </div>
-                    <button type="submit" className="btn btn-success w-50 my-2">Register</button>
-                </form>
+                    <button onClick={this.handleRegister} className="btn btn-success w-50 my-2">Register</button>
+                </div>
             </div>
         );
     }
