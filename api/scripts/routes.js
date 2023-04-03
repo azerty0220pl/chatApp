@@ -3,7 +3,7 @@ const passport = require('passport');
 module.exports = {
     routes: function (app, db) {
 
-        app.route('/login').post(passport.authenticate('local', { failRedirect: "/failedLogin" }), (req, res) => {
+        app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin" }), (req, res) => {
             console.log("/login")
             res.json({"status": "success", "user": req.user});
         }, (err, req, res) => {
