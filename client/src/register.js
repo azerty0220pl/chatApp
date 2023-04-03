@@ -48,22 +48,22 @@ class Register extends React.Component {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
+                data: JSON.stringify({
                     username: user,
                     password: password
                 })
-            }).then(res => res.json()).then(data => {
-                if(data.status === "success") {
+            }).then(res => {
+                if(res.data.status === "success") {
                     this.setState({
                         username: '',
                         password: '',
                         rePassword: '',
                         error: false
                     });
-                    console.log('success', data.user);
+                    console.log('success', res.data.user);
                 } else {
                     this.setState({error: true});
-                    console.log('error', data.message);
+                    console.log('error', res.data.message);
                 }
             }).catch(err => {
                 console.log(err);

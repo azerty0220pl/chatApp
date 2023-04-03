@@ -12,14 +12,10 @@ module.exports = {
         });
 
         app.route('/register').post((req, res) => {
-            console.log("register");
             bcrypt.hash(req.body.password, 10, (err, hash) => {
-                console.log("inside hash");
                 if(err) {
-                    console.log("inside err");
                     res.json({"status": "error", "message": err, "code": "102"});
                 } else {
-                    console.log("inside else");
                     db.newUser(req.body.username, hash).then(x => {
                         res.json(x);
                     }).catch(err => {
@@ -30,7 +26,6 @@ module.exports = {
         });
 
         app.route("/failedLogin").get((req, res) => {
-            console.log('`' + doc + '`');
             res.json({"status": "error", "message": "Failed authentication", "code": "104"});
         })
 

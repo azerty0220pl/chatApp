@@ -29,14 +29,11 @@ class dbMan {
 
     async newUser(username, password) {
         let res = null;
-        console.log("New user");
         await this.User.findOne({username: username}).then(async (doc) => {
             if(!doc){
-                console.log("inside !doc");
                 let user = new this.User({username: username, password: password});
                 await user.save().then((x) => {
-                    console.log("inside save");
-                    res = {status: "success", username: x.username};
+                    res = {status: "success", username: user.username};
                 }).catch((err) => {
                     res = {status: "error", message: err, code: "001"};
                 });
