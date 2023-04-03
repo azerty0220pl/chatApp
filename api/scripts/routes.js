@@ -19,7 +19,8 @@ module.exports = {
         });
 
         app.route("/failedLogin").get((req, res) => {
-            res.json({"status": "error", "message": "Couldn't log in", "code": "103"});
+            console.log('`' + doc + '`');
+            res.json({"status": "error", "message": "Failed authentication", "code": "103"});
         })
 
         app.route('/chats').get(ensureAuthenticated, (req, res) => {

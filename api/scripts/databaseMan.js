@@ -30,15 +30,18 @@ class dbMan {
     async newUser(username, password) {
         let res = null;
         await this.User.find({username: username}).then(async (doc) => {
+            console.log('`' + doc + '`');
+            console.log('`' + !doc + '`');
             if(!doc){
                 let user = new this.User({username: username, password: password});
-                await user.save().then((doc) => {
-                    res = {status: "success", username: doc.username};
+                await user.save().then((x) => {
+                    res = {status: "success", username: x.username};
                 }).catch((err) => {
                     res = {status: "error", message: err, code: "001"};
                 });
-            } else
+            } else {
                 res = {status: "error", message: "User already exists " + doc, code: "002"};
+            }
         }).catch(err => {
             res = {status: "error", message: err, code: "003"};
         });
