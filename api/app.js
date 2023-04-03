@@ -1,14 +1,15 @@
 const express = require('express');
-const  http =  require('http');
-const  cors =  require('cors');
-const  passportSocketIo =  require('passport.socketio');
-const  session =  require('express-session');
-const  cookieParser =  require('cookie-parser');
-const { Server } =  require('socket.io');
-const dbMan =  require('./scripts/databaseMan.js');
-const auth =  require('./scripts/auth.js');
-const routes =  require('./scripts/routes.js');
-const passport =  require('passport');
+const bodyParser = require('body-parser')
+const  http = require('http');
+const  cors = require('cors');
+const  passportSocketIo = require('passport.socketio');
+const  session = require('express-session');
+const  cookieParser = require('cookie-parser');
+const { Server } = require('socket.io');
+const dbMan = require('./scripts/databaseMan.js');
+const auth = require('./scripts/auth.js');
+const routes = require('./scripts/routes.js');
+const passport = require('passport');
 
 const app = express();
 const server = http.createServer(app);
@@ -32,7 +33,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 io.use(
   passportSocketIo.authorize({
