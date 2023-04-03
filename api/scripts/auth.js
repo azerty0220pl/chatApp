@@ -1,5 +1,6 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const bcrypt = require('bcrypt');
 
 module.exports = {
     auth: function(db) {
@@ -18,9 +19,12 @@ module.exports = {
                     return done(x.message);
                 if (!x.user)
                     return done(null, false);
-                if (password != x.user.password)
-                    return done(null, false);
-                return done(null, x.user);
+                bcrypt.compare(password, x.user.password, (err, result) => {
+                    if(err || !result) {
+                        return done(null, false);
+                    }
+                    return done(null, x.user);
+                })
             }).catch(err => {
                 return done(null, false);
             });

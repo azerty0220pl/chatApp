@@ -1,5 +1,4 @@
 import React from "react";
-import bcrypt from 'bcryptjs-react';
 
 class Register extends React.Component {
     constructor(props) {
@@ -43,8 +42,6 @@ class Register extends React.Component {
         e.target.className = "btn btn-success w-50 my-2 disabled"
 
         if(this.state.password === this.state.rePassword) {
-            let hashedPassword = await bcrypt.hash(password, parseInt(user + 'randomValuexD' + user));
-            console.log("hashed password ", hashedPassword);
             await fetch('https://chatapp-api-6dvw.onrender.com/register', {
                 method: 'POST',
                 headers: {
@@ -52,7 +49,7 @@ class Register extends React.Component {
                 },
                 body: JSON.stringify({
                     username: user,
-                    password: hashedPassword
+                    password: password
                 })
             }).then(res => res.json()).then(data => {
                 if(data.status === "success") {
