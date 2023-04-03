@@ -29,9 +29,7 @@ class dbMan {
 
     async newUser(username, password) {
         let res = null;
-        await this.User.find({username: username}).then(async (doc) => {
-            console.log('`' + doc + '`');
-            console.log('`' + !doc + '`');
+        await this.User.findOne({username: username}).then(async (doc) => {
             if(!doc){
                 let user = new this.User({username: username, password: password});
                 await user.save().then((x) => {
