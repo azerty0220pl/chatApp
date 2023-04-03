@@ -1,5 +1,5 @@
 import React from "react";
-import bcrypt from 'bcryptjs-react';
+import Axios from 'axios';
 
 class Login extends React.Component {
     constructor(props) {
@@ -22,33 +22,33 @@ class Login extends React.Component {
         this.setState({password: e.target.value});
     }
 
-    handleLogin (e) {
+    async handleLogin (e) {
         let user = this.state.username;
         let password = this.state.password;
-        let hashedPassword = bcrypt.hash(password, parseInt(user + 'randomValuexD' + user));
         
-        e.target.className = "btn btn-success w-50 my-2 disabled"
+        e.target.className = "btn btn-success w-50 my-2 disabled";
 
-        fetch('https://chatapp-api-6dvw.onrender.com/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: user,
-            password: hashedPassword
-          }),
-        }).then(res => res.json()).then(data => {
-            if(data.status === "success") {
-                this.setState({error: false});
-                console.log('success', data.user);
+        await Axios({
+            method: 'POST',
+            data: "username=" + encodeURI(user) + "&password=" + encodeURI(password),
+            url: 'https://chatapp-api-6dvw.onrender.com/login'
+        }).then(res => {
+            if(res.data.status === "success") {
+                this.setState({
+                    username: '',
+                    password: '',
+                    error: false
+                });
+                console.log('success', res.data.user);
             } else {
                 this.setState({error: true});
-                console.log('error', data.message);
+                console.log('error', res.data.message);
             }
+        }).catch(err => {
+            console.log(err);
         });
 
-        e.target.className = "btn btn-success w-50 my-2"
+        e.target.className = "btn btn-success w-50 my-2";
     }
 
     render() {
@@ -74,7 +74,7 @@ class Login extends React.Component {
                             className="form-control"
                             onChange={this.onPassChange} />
                     </div>
-                    {this.state.error ? <div className="text-danger">Invalid credentials</div> : <div></div>}
+                    <p className="form-text text-danger">{ this.state.error ? "Invalid credentials" : ""}</p>
                     <button
                         type="button"
                         className="btn btn-success w-50 my-2"
