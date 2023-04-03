@@ -7,9 +7,7 @@ class dbMan {
 
         this.userSchema = new this.Schema({
             username: {type: String, required: true, unique: true},
-            password: {type: String, required: true},
-            profilePhoto: {type: Buffer},
-            about: {type: String}
+            password: {type: String, required: true}
         });
         
         this.chatSchema = new this.Schema({
@@ -29,18 +27,18 @@ class dbMan {
         return mongoose.connect(process.env['MONGO_URI'], { useNewUrlParser: true, useUnifiedTopology: true });
     }
 
-    async newUser(username, password, photo, about) {
+    async newUser(username, password) {
         let res = null;
         await this.User.find({username: username}).then(async (doc) => {
             if(!doc){
-                let user = new this.User({username: username, password: password, profilePhoto: photo, about: about});
+                let user = new this.User({username: username, password: password});
                 await user.save().then((doc) => {
                     res = {status: "success", username: doc.username};
                 }).catch((err) => {
                     res = {status: "error", message: err, code: "001"};
                 });
             } else
-                res = {status: "error", message: "User already exists", code: "002"};
+                res = {status: "error", message: "User already exists " + doc, code: "002"};
         }).catch(err => {
             res = {status: "error", message: err, code: "003"};
         });

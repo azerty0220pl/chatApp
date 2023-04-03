@@ -11,7 +11,7 @@ module.exports = {
         });
 
         app.route('/register').post((req, res) => {
-            db.newUser(req.body.username, req.body.password, req.body.photo, req.body.about).then(x => {
+            db.newUser(req.body.username, req.body.password).then(x => {
                 res.json(x);
             }).catch(err => {
                 res.json({"status": "error", "message": err, "code": "102"});
