@@ -69,9 +69,9 @@ const reducer = (state = DEFAULT, action) => {
   let res = null;
   switch (action.type) {
     case LOGIN:
-      axios.get("http://localhost:5000/chats?username=" + action.username, {
+      axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + action.username, {
         headers: {
-          'Access-Control-Allow-Origin': 'http://127.0.0.1:3000'
+          'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
         },
         withCredentials: true
       }).then((data) => {
@@ -96,9 +96,9 @@ const reducer = (state = DEFAULT, action) => {
       };
       break;
     case LOGOUT:
-      axios.get("http://localhost:5000/logout", {
+      axios.get("https://chatapp-api-6dvw.onrender.com/logout", {
         headers: {
-          'Access-Control-Allow-Origin': 'http://127.0.0.1:3000'
+          'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
         },
         withCredentials: true
       }).then((data) => {
@@ -116,9 +116,9 @@ const reducer = (state = DEFAULT, action) => {
       return res;
       break;
     case RELOAD_CHATS:
-      axios.get("http://localhost:5000/chats?username=" + state.username, {
+      axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + state.username, {
         headers: {
-          'Access-Control-Allow-Origin': 'http://127.0.0.1:3000'
+          'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
         },
         withCredentials: true
       }).then((data) => {

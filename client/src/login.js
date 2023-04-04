@@ -31,10 +31,10 @@ class Login extends React.Component {
         await Axios({
             method: 'POST',
             headers: {
-              'Access-Control-Allow-Origin': 'http://localhost:3000/'
+              'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
             },
             data: "username=" + encodeURI(user) + "&password=" + encodeURI(password),
-            url: 'http://localhost:5000/login'
+            url: 'https://chatapp-api-6dvw.onrender.com/login'
         }).then(res => {
             if(res.data.status === "success") {
                 this.props.login(this.state.username);

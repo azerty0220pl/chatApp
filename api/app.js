@@ -21,14 +21,14 @@ const io = new Server(server, {
 });
 
 app.use(cors({
-  origin: 'http://127.0.0.1:3000',
+  origin: 'https://azerty0220pl.github.io/chatApp',
   credentials: true
 }));
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
-  //cookie: { secure: true },
+  cookie: { secure: true },
   key: 'express.sid'
 }));
 app.use(passport.initialize());
