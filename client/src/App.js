@@ -4,13 +4,18 @@ import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
 import axios from 'axios';
 import React from 'react';
+import { io } from 'socket.io-client';
+
+const socket = io('https://chatapp-api-6dvw.onrender.com:4000', {
+  autoConnect: false
+});
 
 const NEW_MESSAGE = 'NEW_MESSAGE';
-const NEW_CHAT = 'NEW_CHAT';
 const CHANGE_CHAT = 'CHANGE_CHAT';
 const GET = 'GET';
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
+const RELOAD_CHATS = 'RELOAD_CHATS';
 
 const DEFAULT = {
   username: '',
@@ -45,11 +50,20 @@ const login = (username) => {
     username: username
   };
 }
+
 const logout = () => {
   return {
     type: LOGOUT
   };
 }
+
+const reload = () => {
+  return {
+    type: RELOAD_CHATS
+  };
+}
+
+socket.on('message', reload);
 
 const reducer = (state = DEFAULT, action) => {
   let res = null;
@@ -71,6 +85,7 @@ const reducer = (state = DEFAULT, action) => {
           curNum: 0,
           curName: name
         }
+        socket.connect();
         return res;
       });
       break;
@@ -87,13 +102,36 @@ const reducer = (state = DEFAULT, action) => {
         },
         withCredentials: true
       }).then((data) => {
+        socket.disconnect();
         return DEFAULT;
       });
       break;
     case NEW_MESSAGE:
       res = { ...state };
-      //io stuff
+      socket.emit('message', {
+        from: res.username,
+        to: res.curName,
+        message: action.message
+      })
       return res;
+      break;
+    case RELOAD_CHATS:
+      axios.get("http://localhost:5000/chats?username=" + state.username, {
+        headers: {
+          'Access-Control-Allow-Origin': 'http://127.0.0.1:3000'
+        },
+        withCredentials: true
+      }).then((data) => {
+        console.log(data);
+        let name = ''
+        if (data.chats.length > 0)
+          name = data.chats[0].user1 === action.user.username ? data.chats[0].user2 : data.chats[0].user1;
+        res = {
+          ...state,
+          chats: data.chats
+        }
+        return res;
+      });
       break;
     default:
       return state;
