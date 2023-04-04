@@ -1,87 +1,125 @@
 import FrontPage from './frontpage.js';
 import Logged from './logged.js';
 import { createStore } from 'redux';
-import { Provider, connect} from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import axios from 'axios';
 import React from 'react';
 
 const NEW_MESSAGE = 'NEW_MESSAGE';
+const NEW_CHAT = 'NEW_CHAT';
 const CHANGE_CHAT = 'CHANGE_CHAT';
 const GET = 'GET';
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 
 const DEFAULT = {
-    username: '',
-    chats: [],
-    curNum: -1,
-    curName: ''
+  username: '',
+  chats: [],
+  curNum: -1,
+  curName: ''
 };
 
 const sendMessage = (msg) => {
-    return {
-        type: NEW_MESSAGE,
-        message: msg
-    };
+  return {
+    type: NEW_MESSAGE,
+    message: msg
+  };
 }
 
 const changeChat = (nm) => {
-    return {
-        type: CHANGE_CHAT,
-        name: nm
-    };
+  return {
+    type: CHANGE_CHAT,
+    name: nm
+  };
 }
 
 const get = () => {
-    return {
-        type: GET
-    };
+  return {
+    type: GET
+  };
 }
 
-const login = (user) => {
-    return {
-        type: LOGIN,
-        user: user
-    };
+const login = (username) => {
+  return {
+    type: LOGIN,
+    username: username
+  };
 }
 const logout = () => {
-    return {
-        type: LOGOUT
-    };
+  return {
+    type: LOGOUT
+  };
 }
 
-const reducer = async (state = DEFAULT, action) => {
-  switch(action.type) {
-      case LOGIN:
-          let res = null;
-          await axios({
-              method: "GET",
-              url: "https://chatapp-api-6dvw.onrender.com/chats"
-          }).then((data) => {
-              res = {
-                  username: action.user.username,
-                  chats: data.chats,
-                  curNum: 0,
-                  curName: data.chats[0].user1 === action.user.username ? data.chats[0].user2 : data.chats[0].user1
-              }
-          });
-          return res;
+const reducer = (state = DEFAULT, action) => {
+  let res = null;
+  switch (action.type) {
+    case LOGIN:
+      axios.get("http://localhost:5000/chats?username=" + action.username, {
+        headers: {
+          'Access-Control-Allow-Origin': 'http://127.0.0.1:3000'
+        },
+        withCredentials: true
+      }).then((data) => {
+        console.log(data);
+        let name = ''
+        if (data.chats.length > 0)
+          name = data.chats[0].user1 === action.user.username ? data.chats[0].user2 : data.chats[0].user1;
+        res = {
+          username: action.username,
+          chats: data.chats,
+          curNum: 0,
+          curName: name
+        }
+        return res;
+      });
+      break;
+    case CHANGE_CHAT:
+      return {
+        curName: action.name,
+        ...state
+      };
+      break;
+    case LOGOUT:
+      axios.get("http://localhost:5000/logout", {
+        headers: {
+          'Access-Control-Allow-Origin': 'http://127.0.0.1:3000'
+        },
+        withCredentials: true
+      }).then((data) => {
+        return DEFAULT;
+      });
+      break;
+    case NEW_MESSAGE:
+      res = { ...state };
+      //io stuff
+      return res;
+      break;
+    default:
+      return state;
   }
 }
 
 const store = createStore(reducer, DEFAULT);
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <div className='container-fluid d-flex flex-column align-items-center justify-content-center w-100 h-100'>
         {
-          () => {
-            if(this.props.username.length == 0)
-              return <FrontPage login={this.props.login} />;
-            else
-              return <Logged />;
-          }
+          this.props.username.length === 0 ? <FrontPage login={this.props.login} />
+            : <Logged
+              chats={this.props.chats}
+              curNum={this.props.curNum}
+              curName={this.props.curName}
+              username={this.props.username}
+              changeChat={this.props.changeChat}
+              logout={this.props.logout}
+              sendMessage={this.props.sendMessage} />
         }
       </div>
     );
@@ -90,21 +128,34 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-      username: state.username,
-      chats: state.chats,
-      curNum: state.curNum,
-      curName: state.curName
+    username: state.username,
+    chats: state.chats,
+    curNum: state.curNum,
+    curName: state.curName
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      login: () => {
-          return dispatch(login());
-      }
+    login: (username) => {
+      return dispatch(login(username));
+    },
+    changeChat: (e, user) => {
+      return dispatch(changeChat(user.isNull() ? e.target.value : user));
+    },
+    logout: () => {
+      return dispatch(logout());
+    },
+    sendMessage: (e, msg) => {
+      return dispatch(sendMessage(msg));
+    }
   };
 };
 
 const Container = connect(mapStateToProps, mapDispatchToProps)(App);
 
-export default (<Provider store={store}><Container /></Provider>);
+function x() {
+  return <Provider store={store}><Container /></Provider>;
+}
+
+export default x;
