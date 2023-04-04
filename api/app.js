@@ -28,7 +28,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
   saveUninitialized: true,
-  cookie: { secure: true },
+  cookie: {
+    secure: false,
+    httpOnly: false
+  },
   key: 'express.sid'
 }));
 app.use(passport.initialize());
