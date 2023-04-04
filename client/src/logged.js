@@ -14,7 +14,11 @@ class Logged extends React.Component {
                     changeChat={this.props.changeChat}
                     logout={this.props.logout} />
                 <div className="border-end m-1" />
-                <Chat />
+                <Chat
+                    chats={this.props.chats}
+                    curNum={this.props.curNum}
+                    curName={this.props.curName}
+                    sendMessage={this.props.sendMessage} />
             </div>
         );
     }
