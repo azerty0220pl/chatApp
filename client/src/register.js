@@ -43,7 +43,7 @@ class Register extends React.Component {
         e.target.className = "btn btn-success w-50 my-2 disabled"
 
         if(this.state.password === this.state.rePassword) {
-            await Axios('https://chatapp-api-6dvw.onrender.com/register', {
+            await Axios('http://localhost:5000/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
