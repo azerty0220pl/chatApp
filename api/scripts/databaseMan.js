@@ -13,10 +13,7 @@ class dbMan {
         this.chatSchema = new this.Schema({
             user1: {type: String, required: true},
             user2: {type: String, required: true},
-            messages1: [{type: String}],
-            date1: [{type: Date, default: new Date}],
-            messages2: [{type: String}],
-            date2: [{type: Date, default: new Date}]
+            messages: [{type: String}]
         });
         
         this.User = mongoose.model("User", this.userSchema);
@@ -54,30 +51,19 @@ class dbMan {
                     if(rec) {
                         await this.Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).then(async (chat) => {
                             if(!chat) {
-                                let x = new this.Chat({user1: sen.username, user2: rec.username, messages1: [message], date1: [new Date], messages2: [], date2: []});
+                                let x = new this.Chat({user1: sen.username, user2: rec.username, messages: [JSON.stringify({"sender": sen.username, "message": message, "date": new Date()})]});
                                 await x.save().then((doc) => {
                                     res = {status: "success"};
                                 }).catch((err) => {
                                     res = {status: "error", message: err, code: "004"};
                                 });
                             } else {
-                                if(sen.username == chat.user1) {
-                                    chat.messages1.push(message);
-                                    chat.date1.push(new Date);
-                                    await chat.save().then((doc) => {
-                                        res = {status: "success"};
-                                    }).catch((err) => {
-                                        res = {status: "error", message: err, code: "005"};
-                                    });
-                                } else {
-                                    chat.messages2.push(message);
-                                    chat.date2.push(new Date);
-                                    await chat.save().then((doc) => {
-                                        res = {status: "success"};
-                                    }).catch((err) => {
-                                        res = {"status": "error", "message": err, "code": "006"};
-                                    });
-                                }
+                                chat.messages.push(JSON.stringify({"sender": sen.username, "message": message, "date": new Date()}));
+                                await chat.save().then((doc) => {
+                                    res = {status: "success"};
+                                }).catch((err) => {
+                                    res = {status: "error", message: err, code: "005"};
+                                });
                             }
                         }).catch((err) => {
                             res = {status: "error", message: err, code: "007"};
