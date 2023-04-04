@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/chatapp/client/static/css/main.089605bc.css",
-    "main.js": "/chatapp/client/static/js/main.00c7e5ff.js",
-    "index.html": "/chatapp/client/index.html",
-    "main.089605bc.css.map": "/chatapp/client/static/css/main.089605bc.css.map",
-    "main.00c7e5ff.js.map": "/chatapp/client/static/js/main.00c7e5ff.js.map"
+    "main.css": "/chatApp/static/css/main.089605bc.css",
+    "main.js": "/chatApp/static/js/main.00c7e5ff.js",
+    "index.html": "/chatApp/index.html",
+    "main.089605bc.css.map": "/chatApp/static/css/main.089605bc.css.map",
+    "main.00c7e5ff.js.map": "/chatApp/static/js/main.00c7e5ff.js.map"
   },
   "entrypoints": [
     "static/css/main.089605bc.css",

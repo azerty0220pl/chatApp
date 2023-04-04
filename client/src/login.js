@@ -31,7 +31,7 @@ class Login extends React.Component {
         await Axios({
             method: 'POST',
             headers: {
-              'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
+              'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
             },
             data: "username=" + encodeURI(user) + "&password=" + encodeURI(password),
             url: 'https://chatapp-api-6dvw.onrender.com/login'

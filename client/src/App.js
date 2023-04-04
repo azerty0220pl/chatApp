@@ -118,7 +118,7 @@ const reducer = (state = DEFAULT, action) => {
     case RELOAD_CHATS:
       axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + state.username, {
         headers: {
-          'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
+          'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
         },
         withCredentials: true
       }).then((data) => {

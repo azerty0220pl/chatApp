@@ -21,7 +21,7 @@ const io = new Server(server, {
 });
 
 app.use(cors({
-  origin: 'https://azerty0220pl.github.io/chatApp',
+  origin: 'https://azerty0220pl.github.io',
   credentials: true
 }));
 app.use(session({
