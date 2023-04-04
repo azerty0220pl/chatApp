@@ -6,18 +6,20 @@ module.exports = {
     auth: function(db) {
         passport.serializeUser((user, done) => {
             console.log("serializeUser", user);
-            done(null, user.username);
+            done(null, user);
         });
 
         passport.deserializeUser((id, done) => {
-            let user = db.getUser(id).user;
-            console.log(user);
-            done(null, db.getUser(id).user.username);
+            console.log("deserialize id", id);
+            db.getUser(id).then(doc => {
+                console.log("deserialize", doc);
+                done(null, doc.user);
+            });
         });
 
         passport.use(new LocalStrategy((username, password, done) => {
+            console.log(username, password);
             db.getUser(username).then(x => {
-                console.log(password, x.user.password);
                 if(x.status == 'error')
                     return done(x.message);
                 if (!x.user)

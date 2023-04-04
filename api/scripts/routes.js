@@ -5,7 +5,6 @@ module.exports = {
     routes: function (app, db) {
 
         app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin", session: true }), (req, res) => {
-            console.log("/login")
             res.json({"status": "success", "user": req.user});
         }, (err, req, res) => {
             res.json({"status": "error", "message": err, "code": "101"});
@@ -30,11 +29,16 @@ module.exports = {
         })
 
         app.route('/chats').get(ensureAuthenticated, (req, res) => {
-            db.getAllChats(req.user.username).then(x => {
+            db.getAllChats(req.query.username).then(x => {
                 res.json(x);
             }).catch(err => {
                 res.json({"status": "error", "message": err, "code": "105"});
             });
+        });
+
+        app.route('/logout').get((req, res) => {
+            req.logout();
+            res.json({"status": "success"});
         })
 
         app.use((req, res, next) => {
@@ -48,5 +52,4 @@ function ensureAuthenticated(req, res, next) {
         return next();
     }
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
-    return next();
 };
