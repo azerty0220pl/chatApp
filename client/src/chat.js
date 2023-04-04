@@ -33,7 +33,7 @@ class Chat extends React.Component {
     }
 
     updateMsg(e){
-        this.setState({message: msg})
+        this.setState({message: e.target.value})
     }
 
     render() {
