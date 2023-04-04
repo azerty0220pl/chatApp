@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 module.exports = {
     routes: function (app, db) {
 
-        app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin" }), (req, res) => {
+        app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin", session: true }), (req, res) => {
             console.log("/login")
             res.json({"status": "success", "user": req.user});
         }, (err, req, res) => {
