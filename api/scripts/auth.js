@@ -9,6 +9,8 @@ module.exports = {
         });
 
         passport.deserializeUser((id, done) => {
+            let user = db.getUser(id).user;
+            console.log(user);
             done(null, db.getUser(id).user);
         });
 
@@ -23,7 +25,7 @@ module.exports = {
                     if(err || !result) {
                         return done(null, false);
                     }
-                    return done(null, x.user);
+                    return done(null, x.user.username);
                 })
             }).catch(err => {
                 return done(null, false);
