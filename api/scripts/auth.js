@@ -5,13 +5,14 @@ const bcrypt = require('bcrypt');
 module.exports = {
     auth: function(db) {
         passport.serializeUser((user, done) => {
-            done(null, user._id);
+            console.log("serializeUser", user);
+            done(null, user.username);
         });
 
         passport.deserializeUser((id, done) => {
             let user = db.getUser(id).user;
             console.log(user);
-            done(null, db.getUser(id).user);
+            done(null, db.getUser(id).user.username);
         });
 
         passport.use(new LocalStrategy((username, password, done) => {
