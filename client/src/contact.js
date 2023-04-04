@@ -10,10 +10,16 @@ class Contact extends React.Component {
         }
 
         this.handleWrite = this.handleWrite.bind(this);
+        this.changeChat = this.changeChat.bind(this);
     }
 
     handleWrite(e) {
         this.setState({write: e.target.value});
+    }
+
+    changeChat(e) {
+        this.props.changeChat(this.state.write);
+        this.setState({write: ''});
     }
 
     render() {
@@ -25,7 +31,7 @@ class Contact extends React.Component {
                 </div>
                 <div className="d-flex">
                     <input type="text" className="form-control" onChange={this.handleWrite} />
-                    <button className="btn btn-primary rounded-pill" onClick={this.props.changeChat(this.state.write)}>Write</button>
+                    <button className="btn btn-primary rounded-pill" onClick={this.changeChat}>Write</button>
                 </div>
                 <div>
                 {
