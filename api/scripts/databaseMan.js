@@ -118,9 +118,9 @@ class dbMan {
     async getAllChats(username) {
         let res = null;
         await this.Chat.find({$or: [{user1: username}, {user2: username}]}).then((chats) => {
-            return {status: "success", chats: chats};
+            res =  {status: "success", chats: chats};
         }).catch((err) => {
-            return {status: "error", message: err, code: '014'};
+            res = {status: "error", message: err, code: '014'};
         });
         return res;
     }
