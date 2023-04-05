@@ -5,11 +5,12 @@ module.exports = {
     routes: function (app, db) {
 
         app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin", session: true }), (req, res) => {
-            console.log("res", JSON.stringify(res.headers));
             console.log("req", JSON.stringify(req.headers));
             res.json({"status": "success", "user": req.user});
+            console.log("res", JSON.stringify(res.headers));
         }, (err, req, res) => {
             res.json({"status": "error", "message": err, "code": "101"});
+            console.log("res", JSON.stringify(res.headers));
         });
 
         app.route('/register').post((req, res) => {
@@ -56,4 +57,5 @@ function ensureAuthenticated(req, res, next) {
     console.log("res", JSON.stringify(res.headers));
     console.log("req", JSON.stringify(req.headers));
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
+    console.log("res", JSON.stringify(res.headers));
 };
