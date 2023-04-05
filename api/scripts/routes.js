@@ -5,6 +5,9 @@ module.exports = {
     routes: function (app, db) {
 
         app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin", session: true }), (req, res) => {
+            res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
+            res.header('Access-Control-Allow-Credentials', true);
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             console.log("req", JSON.stringify(req.headers));
             res.json({"status": "success", "user": req.user});
             console.log("res", JSON.stringify(res.headers));
@@ -51,10 +54,12 @@ module.exports = {
 };
 
 function ensureAuthenticated(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if (req.isAuthenticated()) {
         return next();
     }
-    console.log("res", JSON.stringify(res.headers));
     console.log("req", JSON.stringify(req.headers));
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
     console.log("res", JSON.stringify(res.headers));
