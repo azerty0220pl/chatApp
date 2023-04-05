@@ -1,15 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser')
-const  http = require('http');
-const  cors = require('cors');
-const  passportSocketIo = require('passport.socketio');
-const  session = require('express-session');
-const  cookieParser = require('cookie-parser');
+const http = require('http');
+const cors = require('cors');
+const passportSocketIo = require('passport.socketio');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const { Server } = require('socket.io');
 const dbMan = require('./scripts/databaseMan.js');
 const auth = require('./scripts/auth.js');
 const routes = require('./scripts/routes.js');
 const passport = require('passport');
+const MongoStore = require('connect-mongo')(session);
+const URI = process.env.MONGO_URI;
+const store = new MongoStore({ url: URI });
 
 const app = express();
 const server = http.createServer(app);
@@ -24,9 +27,6 @@ const io = new Server(server, {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-const MongoStore = require('connect-mongo')(session);
-const URI = process.env.MONGO_URI;
-const store = new MongoStore({ url: URI });
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
