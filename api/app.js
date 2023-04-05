@@ -24,6 +24,9 @@ const io = new Server(server, {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+const MongoStore = require('connect-mongo')(session);
+const URI = process.env.MONGO_URI;
+const store = new MongoStore({ url: URI });
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
@@ -32,9 +35,11 @@ app.use(session({
     secure: false,
     httpOnly: false,
     sameSite: 'none',
-    secure: true
+    secure: true,
+    maxAge: 24 * 60 * 60 * 1000
   },
-  key: 'express.sid'
+  key: 'express.sid',
+  store: store
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -55,6 +60,7 @@ io.use(
     cookieParser: cookieParser,
     key: 'express.sid',
     secret: process.env.SESSION_SECRET,
+    store: store,
     success: onAuthorizeSuccess,
     fail: onAuthorizeFail
   })
