@@ -33,6 +33,7 @@ class Login extends React.Component {
             headers: {
               'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
             },
+            withCredentials: true,
             data: "username=" + encodeURI(user) + "&password=" + encodeURI(password),
             url: 'https://chatapp-api-6dvw.onrender.com/login'
         }).then(res => {
