@@ -6,6 +6,8 @@ import axios from 'axios';
 import React from 'react';
 import { io } from 'socket.io-client';
 
+axios.defaults.withCredentials = true;
+
 const socket = io('https://chatapp-api-6dvw.onrender.com:4000', {
   autoConnect: false
 });

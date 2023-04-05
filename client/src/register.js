@@ -1,6 +1,7 @@
 import React from "react";
 import Axios from 'axios';
 
+
 class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -46,6 +47,7 @@ class Register extends React.Component {
             await Axios({
                 method: 'POST',
                 withCredentials: true,
+                credentials: 'include',
                 headers: {
                   'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
                 },
