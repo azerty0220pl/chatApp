@@ -21,10 +21,9 @@ const io = new Server(server, {
   },
 });
 
-app.use(cors({
-  origin: 'https://azerty0220pl.github.io',
-  credentials: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
@@ -37,18 +36,19 @@ app.use(session({
   },
   key: 'express.sid'
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(cors({
+  origin: 'https://azerty0220pl.github.io',
+  credentials: true
+}));
 /*app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });*/
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 io.use(
   passportSocketIo.authorize({
