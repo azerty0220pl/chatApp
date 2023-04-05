@@ -5,7 +5,7 @@ module.exports = {
     routes: function (app, db) {
 
         app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin", session: true }), (req, res) => {
-            console.log(res.headers['set-cookie']);
+            console.log(res.headers);
             res.json({"status": "success", "user": req.user});
         }, (err, req, res) => {
             res.json({"status": "error", "message": err, "code": "101"});
