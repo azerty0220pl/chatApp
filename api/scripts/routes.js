@@ -53,5 +53,7 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
+    console.log("res", JSON.stringify(res.headers));
+    console.log("req", JSON.stringify(req.headers));
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
 };
