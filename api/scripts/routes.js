@@ -8,12 +8,12 @@ module.exports = {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            console.log("req login", JSON.stringify(req.headers));
+            
+            console.log("login", res.getHeader('Set-Cookie'));
+
             res.json({"status": "success", "user": req.user});
-            console.log("res login", JSON.stringify(res.headers));
         }, (err, req, res) => {
             res.json({"status": "error", "message": err, "code": "101"});
-            console.log("res", JSON.stringify(res.headers));
         });
 
         app.route('/register').post((req, res) => {
@@ -57,10 +57,12 @@ function ensureAuthenticated(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     if (req.isAuthenticated()) {
         return next();
     }
-    console.log("req chats", JSON.stringify(req.headers));
+
+    console.log("ensure", res.getHeader('Set-Cookie'));
+
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
-    console.log("res chats", JSON.stringify(res.headers));
 };
