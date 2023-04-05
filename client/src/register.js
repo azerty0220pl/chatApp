@@ -1,6 +1,7 @@
 import React from "react";
 import Axios from 'axios';
 
+Axios.defaults.withCredentials = true;
 
 class Register extends React.Component {
     constructor(props) {

@@ -1,7 +1,7 @@
 import React from "react";
 import Axios from 'axios';
 
-axios.defaults.withCredentials = true;
+Axios.defaults.withCredentials = true;
 
 class Login extends React.Component {
     constructor(props) {
