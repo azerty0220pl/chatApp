@@ -8,8 +8,9 @@ module.exports = {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            //res.cookie('express.sid', )
             
-            console.log("login", res.getHeader('Set-Cookie'));
+            console.log("login", req.session);
 
             res.json({"status": "success", "user": req.user});
         }, (err, req, res) => {
@@ -62,7 +63,7 @@ function ensureAuthenticated(req, res, next) {
         return next();
     }
 
-    console.log("ensure", res.getHeader('Set-Cookie'));
+    console.log("ensure", req.session);
 
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
 };
