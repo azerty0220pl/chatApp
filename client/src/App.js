@@ -71,7 +71,6 @@ const reducer = (state = DEFAULT, action) => {
   let res = null;
   switch (action.type) {
     case LOGIN:
-      console.log(document.cookie);
       axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + action.username, {
         withCredentials: true,
         credentials: 'include',
