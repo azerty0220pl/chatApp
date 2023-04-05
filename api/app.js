@@ -13,6 +13,7 @@ const passport = require('passport');
 
 const app = express();
 const server = http.createServer(app);
+cors.SupportsCredentials = true;
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:4000',
