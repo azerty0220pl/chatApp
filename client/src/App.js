@@ -97,10 +97,10 @@ const reducer = (state = DEFAULT, action) => {
       break;
     case LOGOUT:
       axios.get("https://chatapp-api-6dvw.onrender.com/logout", {
+        withCredentials: true,
         headers: {
           'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
-        },
-        withCredentials: true
+        }
       }).then((data) => {
         socket.disconnect();
         return DEFAULT;
@@ -117,10 +117,10 @@ const reducer = (state = DEFAULT, action) => {
       break;
     case RELOAD_CHATS:
       axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + state.username, {
+        withCredentials: true,
         headers: {
           'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
-        },
-        withCredentials: true
+        }
       }).then((data) => {
         console.log(data);
         let name = ''
