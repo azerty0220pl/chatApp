@@ -31,6 +31,7 @@ class Login extends React.Component {
         await Axios({
             method: 'POST',
             withCredentials: true,
+            credentials: 'include',
             headers: {
               'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
             },
