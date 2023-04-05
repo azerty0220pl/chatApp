@@ -18,7 +18,6 @@ module.exports = {
         });
 
         passport.use(new LocalStrategy((username, password, done) => {
-            console.log(username, password);
             db.getUser(username).then(x => {
                 if(x.status == 'error')
                     return done(x.message);
