@@ -8,9 +8,9 @@ module.exports = {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            console.log("req", JSON.stringify(req.headers));
+            console.log("req login", JSON.stringify(req.headers));
             res.json({"status": "success", "user": req.user});
-            console.log("res", JSON.stringify(res.headers));
+            console.log("res login", JSON.stringify(res.headers));
         }, (err, req, res) => {
             res.json({"status": "error", "message": err, "code": "101"});
             console.log("res", JSON.stringify(res.headers));
@@ -60,7 +60,7 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    console.log("req", JSON.stringify(req.headers));
+    console.log("req chats", JSON.stringify(req.headers));
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
-    console.log("res", JSON.stringify(res.headers));
+    console.log("res chats", JSON.stringify(res.headers));
 };
