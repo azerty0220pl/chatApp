@@ -71,16 +71,18 @@ function ensureAuthenticated(req, res, next) {
         } else {
             console.log('All session IDs:');
             sessions.forEach(function (session) {
-                console.log(session.id);
+                console.log(session);
             });
         }
     });
+
+    console.log("ensure 1", req.sessionID);
 
     if (req.isAuthenticated()) {
         return next();
     }
 
-    console.log("ensure", req.sessionID);
+    console.log("ensure 2", req.sessionID);
 
     res.json({ "status": "error", "message": "No user authenticated", "code": "106" });
 };
