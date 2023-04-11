@@ -13,7 +13,11 @@ module.exports = {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            res.cookie('test', 'Hello, World!');
+            res.cookie('express.sid', req.sessionID, {
+                httpOnly: false,
+                sameSite: 'none',
+                secure: true,
+                maxAge: 24 * 60 * 60 * 1000});
             
             console.log("login", req.sessionID);
 
@@ -42,6 +46,11 @@ module.exports = {
 
         app.route('/chats').get(ensureAuthenticated, (req, res) => {
             db.getAllChats(req.query.username).then(x => {
+                res.cookie('express.sid', req.sessionID, {
+                    httpOnly: false,
+                    sameSite: 'none',
+                    secure: true,
+                    maxAge: 24 * 60 * 60 * 1000});
                 res.json(x);
             }).catch(err => {
                 res.json({"status": "error", "message": err, "code": "105"});
@@ -63,15 +72,11 @@ function ensureAuthenticated(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-
-    res.cookie("ensure", "ensuring");
-    console.log("ensure 1", req.headers.cookie);
-
     if (req.isAuthenticated()) {
         return next();
     }
 
-    console.log("ensure 2", req.sessionID);
+    console.log("ensure", req.sessionID);
 
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
 };
