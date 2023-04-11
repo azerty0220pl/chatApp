@@ -3,11 +3,6 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
     routes: function (app, db) {
-        
-        app.route('/').get((req, res) => {
-            res.cookie('test', 'Hello, World!');
-            res.send("hello, world!");
-        });
 
         app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin", session: true }), (req, res) => {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
@@ -46,11 +41,6 @@ module.exports = {
 
         app.route('/chats').get(ensureAuthenticated, (req, res) => {
             db.getAllChats(req.query.username).then(x => {
-                res.cookie('express.sid', req.sessionID, {
-                    httpOnly: false,
-                    sameSite: 'none',
-                    secure: true,
-                    maxAge: 24 * 60 * 60 * 1000});
                 res.json(x);
             }).catch(err => {
                 res.json({"status": "error", "message": err, "code": "105"});
