@@ -9,7 +9,7 @@ module.exports = {
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             res.cookie('express.sid', req.sessionID, {
-                httpOnly: false,
+                httpOnly: true,
                 sameSite: 'none',
                 secure: true,
                 maxAge: 24 * 60 * 60 * 1000});
