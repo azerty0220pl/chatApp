@@ -73,7 +73,6 @@ const reducer = (state = DEFAULT, action) => {
     case LOGIN:
       axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + action.username, {
         withCredentials: true,
-        credentials: 'include',
         headers: {
           'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
         }
@@ -121,7 +120,6 @@ const reducer = (state = DEFAULT, action) => {
     case RELOAD_CHATS:
       axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + state.username, {
         withCredentials: true,
-        credentials: 'include',
         headers: {
           'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
         }
