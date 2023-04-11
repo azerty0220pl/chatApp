@@ -8,9 +8,9 @@ module.exports = {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            //res.cookie('express.sid', )
+            res.cookie('express.sid', req.sessionID);
             
-            console.log("login", req.session);
+            console.log("login", req.sessionID);
 
             res.json({"status": "success", "user": req.user});
         }, (err, req, res) => {
