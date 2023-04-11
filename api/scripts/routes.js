@@ -9,6 +9,7 @@ module.exports = {
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
             res.cookie('express.sid', req.sessionID);
+            res.cookie('test', 'Hello, World!');
             
             console.log("login", req.sessionID);
 
@@ -59,11 +60,13 @@ function ensureAuthenticated(req, res, next) {
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
+    console.log("ensure 1", req.headers.cookie);
+
     if (req.isAuthenticated()) {
         return next();
     }
 
-    console.log("ensure", req.session);
+    console.log("ensure 2", req.sessionID);
 
     res.json({"status": "error", "message": "No user authenticated", "code": "106"});
 };
