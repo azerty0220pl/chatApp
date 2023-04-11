@@ -34,7 +34,7 @@ app.use(session({
   cookie: {
     httpOnly: false,
     sameSite: 'none',
-    secure: true,
+    secure: false,
     maxAge: 24 * 60 * 60 * 1000
   },
   key: 'express.sid',
