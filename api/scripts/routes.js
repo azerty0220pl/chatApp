@@ -3,6 +3,11 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
     routes: function (app, db) {
+        
+        app.route('/').get((req, res) => {
+            res.cookie('test', 'Hello, World!');
+            res.send("hello, world!");
+        });
 
         app.route('/login').post(passport.authenticate('local', { failureRedirect: "/failedLogin", session: true }), (req, res) => {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
