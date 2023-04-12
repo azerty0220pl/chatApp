@@ -25,6 +25,8 @@ const io = new Server(server, {
     origin: 'https://azerty0220pl.github.io',
     methods: ['GET', 'POST']
   },
+  transports: ['websocket'],
+  path: '/socket.io'
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
