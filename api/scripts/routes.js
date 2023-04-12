@@ -15,7 +15,8 @@ module.exports = {
                 maxAge: 24 * 60 * 60 * 1000
             });
 
-            console.log("login", req.sessionID);
+            console.log("login 1", req.sessionID);
+            console.log("login 2", req.session);
 
             res.json({ "status": "success", "user": req.user });
         }, (err, req, res) => {
@@ -82,7 +83,7 @@ function ensureAuthenticated(req, res, next) {
         return next();
     }
 
-    console.log("ensure 2", req.sessionID);
+    console.log("ensure 2", req.session);
 
     res.json({ "status": "error", "message": "No user authenticated", "code": "106" });
 };
