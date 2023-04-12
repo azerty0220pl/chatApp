@@ -15,6 +15,9 @@ const URI = process.env.MONGO_URI;
 const store = new MongoStore({ url: URI });
 
 const app = express();
+
+app.set('trust proxy', true);
+
 const server = http.createServer(app);
 //cors.SupportsCredentials = true;
 const io = new Server(server, {
@@ -38,7 +41,8 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000
   },
   key: 'express.sid',
-  store: store
+  store: store,
+  proxy: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());

@@ -8,13 +8,7 @@ module.exports = {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            res.cookie('express.sid', req.sessionID, {
-                httpOnly: true,
-                sameSite: 'none',
-                secure: true,
-                maxAge: 24 * 60 * 60 * 1000
-            });
-
+        
             console.log("login 1", req.sessionID);
             console.log("login 2", req.session);
 
@@ -64,18 +58,6 @@ function ensureAuthenticated(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-
-    req.sessionStore.all(function (error, sessions) {
-        if (error) {
-            console.error(error);
-            res.status(500).send('Internal server error');
-        } else {
-            console.log('All session IDs:');
-            sessions.forEach(function (session) {
-                console.log(session);
-            });
-        }
-    });
 
     console.log("ensure 1", req.sessionID);
 
