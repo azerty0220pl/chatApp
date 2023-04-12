@@ -8,7 +8,7 @@ import { io } from 'socket.io-client';
 
 axios.defaults.withCredentials = true;
 
-const socket = io('https://chatapp-api-6dvw.onrender.com:4000', {
+const socket = io('https://chatapp-api-6dvw.onrender.com', {
   autoConnect: false
 });
 

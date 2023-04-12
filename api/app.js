@@ -23,7 +23,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: 'https://azerty0220pl.github.io',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST']
   },
 });
 
