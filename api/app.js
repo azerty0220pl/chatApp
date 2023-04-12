@@ -22,7 +22,7 @@ const server = http.createServer(app);
 //cors.SupportsCredentials = true;
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:4000',
+    origin: 'https://azerty0220pl.github.io',
     methods: ['GET', 'POST'],
   },
 });
@@ -51,12 +51,6 @@ app.use(cors({
   origin: 'https://azerty0220pl.github.io',
   credentials: true
 }));
-/*app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});*/
 
 io.use(
   passportSocketIo.authorize({

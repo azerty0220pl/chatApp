@@ -86,7 +86,7 @@ const reducer = (state = DEFAULT, action) => {
           curNum: 0,
           curName: name
         }
-        socket.connect();
+        socket.connect('https://chatapp-api-6dvw.onrender.com');
         return res;
       });
       break;
