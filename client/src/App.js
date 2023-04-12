@@ -77,13 +77,12 @@ const reducer = (state = DEFAULT, action) => {
           'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
         }
       }).then((data) => {
-        console.log(data);
         let name = ''
-        if (data.chats.length > 0)
-          name = data.chats[0].user1 === action.user.username ? data.chats[0].user2 : data.chats[0].user1;
+        if (data.data.chats.length > 0)
+          name = data.data.chats[0].user1 === action.user.username ? data.data.chats[0].user2 : data.data.chats[0].user1;
         res = {
           username: action.username,
-          chats: data.chats,
+          chats: data.data.chats,
           curNum: 0,
           curName: name
         }
