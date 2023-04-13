@@ -77,7 +77,7 @@ db.connect().then(() => {
     socket.join(socket.request.user.username);
     socket.emit('joined');
 
-    io.on('message', (data, callback) => {
+    socket.on('message', (data, callback) => {
       console.log("message", data.message);
       db.sendMessage(data.from, data.to, data.message).then(() => {
 
