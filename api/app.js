@@ -73,17 +73,23 @@ db.connect().then(() => {
 
   io.on('connection', (socket) => {
     console.log("connected");
-    
+
     socket.join(socket.request.user.username);
     socket.emit('joined');
 
-    io.on('message', (data) => {
+    io.on('message', (data, callback) => {
       console.log("message", data.message);
-      db.sendMessage(data.from, data.to, data.message).then(x => {
-        socket.emit('sent', {status: x.status});
+      db.sendMessage(data.from, data.to, data.message).then(() => {
+
         io.to(data.to).emit('message', data);
+
+        callback({
+          status: "success"
+        });
       }).catch(err => {
-        socket.emit('not sent', {status: "error", message: err});
+        callback({
+          status: "error"
+        });
       });
     });
   });

@@ -9,7 +9,8 @@ import { io } from 'socket.io-client';
 axios.defaults.withCredentials = true;
 
 const socket = io('https://chatapp-api-6dvw.onrender.com', {
-  autoConnect: false
+  autoConnect: false,
+  transports: ['websocket']
 });
 
 const NEW_MESSAGE = 'NEW_MESSAGE';
@@ -74,8 +75,6 @@ const chats = (chats) => {
   }
 }
 
-socket.on('message', reload);
-
 const reducer = (state = DEFAULT, action) => {
   let res = null;
   switch (action.type) {
@@ -85,6 +84,7 @@ const reducer = (state = DEFAULT, action) => {
         username: action.username
       };
       reload();
+      socket.connect();
       return res;
     case CHANGE_CHAT:
       console.log("change chat", action.name);
@@ -101,6 +101,13 @@ const reducer = (state = DEFAULT, action) => {
         from: res.username,
         to: res.curName,
         message: action.message
+      }, (response) => {
+        if (response.status === "error")
+          console.log("Not sent, server error");
+        else {
+          console.log("success");
+          reload();
+        }
       });
       return res;
     case RELOAD_CHATS:
@@ -121,7 +128,7 @@ const reducer = (state = DEFAULT, action) => {
         loading: false,
         chats: action.chats
       };
-      if(res.curNum == -1 && res.chats.length > 0)
+      if (res.curNum == -1 && res.chats.length > 0)
         res.curNum = 0;
       return res;
     default:
@@ -153,8 +160,7 @@ class App extends React.Component {
 
   componentDidUpdate(prevProps) {
     console.log("updating state");
-    if(prevProps.chats !== this.props.chats || prevProps.username !== this.props.username || prevProps.curName !== this.props.curName || prevProps.curNum !== this.props.curNum)
-    {
+    if (prevProps.chats !== this.props.chats || prevProps.username !== this.props.username || prevProps.curName !== this.props.curName || prevProps.curNum !== this.props.curNum) {
       this.setState({
         chats: this.props.chats,
         curName: this.props.curName,
