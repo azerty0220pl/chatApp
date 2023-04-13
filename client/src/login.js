@@ -16,40 +16,42 @@ class Login extends React.Component {
         this.onPassChange = this.onPassChange.bind(this);
     }
 
-    onUserChange (e) {
-        this.setState({username: e.target.value});
+    onUserChange(e) {
+        this.setState({ username: e.target.value });
     }
 
-    onPassChange (e) {
-        this.setState({password: e.target.value});
+    onPassChange(e) {
+        this.setState({ password: e.target.value });
     }
 
-    async handleLogin (e) {
+    async handleLogin(e) {
         let user = this.state.username;
         let password = this.state.password;
-        
-        e.target.className = "btn btn-success w-50 my-2 disabled";
 
+        e.target.className = "btn btn-success w-50 my-2 disabled";
+        console.log("handle login");
         await Axios({
             method: 'POST',
             withCredentials: true,
             headers: {
-              'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
+                'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
             },
             data: "username=" + encodeURI(user) + "&password=" + encodeURI(password),
             url: 'https://chatapp-api-6dvw.onrender.com/login'
         }).then(res => {
             console.log(res);
-            if(res.data.status === "success") {
+            if (res.data.status === "success") {
                 this.props.login(this.state.username);
                 this.setState({
                     username: '',
                     password: '',
                     error: false
                 });
+
+                this.props.reload();
                 console.log('success', res.data.user);
             } else {
-                this.setState({error: true});
+                this.setState({ error: true });
                 console.log('error', res.data.message);
             }
         }).catch(err => {
@@ -82,7 +84,7 @@ class Login extends React.Component {
                             className="form-control"
                             onChange={this.onPassChange} />
                     </div>
-                    <p className="form-text text-danger">{ this.state.error ? "Invalid credentials" : ""}</p>
+                    <p className="form-text text-danger">{this.state.error ? "Invalid credentials" : ""}</p>
                     <button
                         type="button"
                         className="btn btn-success w-50 my-2"

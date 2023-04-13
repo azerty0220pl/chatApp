@@ -18,12 +18,14 @@ const GET = 'GET';
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const RELOAD_CHATS = 'RELOAD_CHATS';
+const CHATS = 'CHATS';
 
 const DEFAULT = {
   username: '',
   chats: [],
   curNum: -1,
-  curName: ''
+  curName: '',
+  loading: false
 };
 
 const sendMessage = (msg) => {
@@ -65,75 +67,63 @@ const reload = () => {
   };
 }
 
+const chats = (chats) => {
+  return {
+    type: CHATS,
+    chats: chats
+  }
+}
+
 socket.on('message', reload);
 
 const reducer = (state = DEFAULT, action) => {
   let res = null;
   switch (action.type) {
     case LOGIN:
-      axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + action.username, {
-        withCredentials: true,
-        headers: {
-          'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
-        }
-      }).then((data) => {
-        let name = ''
-        if (data.data.chats.length > 0)
-          name = data.data.chats[0].user1 === action.user.username ? data.data.chats[0].user2 : data.data.chats[0].user1;
-        res = {
-          username: action.username,
-          chats: data.data.chats,
-          curNum: 0,
-          curName: name
-        }
-        socket.connect('https://chatapp-api-6dvw.onrender.com');
-        return res;
-      });
-      break;
-    case CHANGE_CHAT:
-      return {
-        curName: action.name,
-        ...state
+      res = {
+        ...state,
+        username: action.username
       };
-      break;
+      reload();
+      return res;
+    case CHANGE_CHAT:
+      console.log("change chat", action.name);
+      return {
+        ...state,
+        curName: action.name
+      };
     case LOGOUT:
-      axios.get("https://chatapp-api-6dvw.onrender.com/logout", {
-        withCredentials: true,
-        headers: {
-          'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io/chatApp'
-        }
-      }).then((data) => {
-        socket.disconnect();
-        return DEFAULT;
-      });
-      break;
+      return DEFAULT;
     case NEW_MESSAGE:
+      console.log("sending message");
       res = { ...state };
       socket.emit('message', {
         from: res.username,
         to: res.curName,
         message: action.message
-      })
+      });
       return res;
-      break;
     case RELOAD_CHATS:
+      res = { ...state };
+      res.loading = true;
       axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + state.username, {
         withCredentials: true,
         headers: {
           'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
         }
       }).then((data) => {
-        console.log(data);
-        let name = ''
-        if (data.chats.length > 0)
-          name = data.chats[0].user1 === action.user.username ? data.chats[0].user2 : data.chats[0].user1;
-        res = {
-          ...state,
-          chats: data.chats
-        }
-        return res;
+        chats(data.data.chats);
       });
-      break;
+      return res;
+    case CHATS:
+      res = {
+        ...state,
+        loading: false,
+        chats: action.chats
+      };
+      if(res.curNum == -1 && res.chats.length > 0)
+        res.curNum = 0;
+      return res;
     default:
       return state;
   }
@@ -144,21 +134,56 @@ const store = createStore(reducer, DEFAULT);
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      chats: this.props.chats,
+      curName: this.props.curName,
+      curNum: this.props.curNum,
+      username: this.props.username,
+      changeChat: this.props.changeChat,
+      logout: this.props.logout,
+      sendMessage: this.props.sendMessage,
+      login: this.props.login,
+      reload: this.props.reload
+    };
+  }
+
+  componentDidMount() {
+    console.log("mounted", this.state);
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log("updating state");
+    if(prevProps.chats !== this.props.chats || prevProps.username !== this.props.username || prevProps.curName !== this.props.curName || prevProps.curNum !== this.props.curNum)
+    {
+      this.setState({
+        chats: this.props.chats,
+        curName: this.props.curName,
+        curNum: this.props.curNum,
+        username: this.props.username,
+        changeChat: this.props.changeChat,
+        logout: this.props.logout,
+        sendMessage: this.props.sendMessage,
+        login: this.props.login,
+        reload: this.props.reload
+      });
+    }
   }
 
   render() {
+    console.log(this.props.username + " logged");
     return (
       <div className='container-fluid d-flex flex-column align-items-center justify-content-center w-100 h-100'>
         {
-          this.props.username.length === 0 ? <FrontPage login={this.props.login} />
+          this.state.username.length === 0 ? <FrontPage login={this.state.login} reload={this.state.reload} />
             : <Logged
-              chats={this.props.chats}
-              curNum={this.props.curNum}
-              curName={this.props.curName}
-              username={this.props.username}
-              changeChat={this.props.changeChat}
-              logout={this.props.logout}
-              sendMessage={this.props.sendMessage} />
+              chats={this.state.chats}
+              curNum={this.state.curNum}
+              curName={this.state.curName}
+              username={this.state.username}
+              changeChat={this.state.changeChat}
+              logout={this.state.logout}
+              sendMessage={this.state.sendMessage}
+              reload={this.state.reload} />
         }
       </div>
     );
@@ -166,6 +191,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log("mappingStateToProps");
+  console.log(state);
   return {
     username: state.username,
     chats: state.chats,
@@ -179,14 +206,19 @@ const mapDispatchToProps = (dispatch) => {
     login: (username) => {
       return dispatch(login(username));
     },
-    changeChat: (e, user) => {
-      return dispatch(changeChat(user.isNull() ? e.target.value : user));
+    changeChat: (user) => {
+      console.log("user", user);
+      return dispatch(changeChat(user));
     },
     logout: () => {
       return dispatch(logout());
     },
-    sendMessage: (e, msg) => {
+    sendMessage: (msg) => {
+      console.log("message", msg);
       return dispatch(sendMessage(msg));
+    },
+    reload: () => {
+      return dispatch(reload());
     }
   };
 };
