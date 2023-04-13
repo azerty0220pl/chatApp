@@ -72,13 +72,10 @@ db.connect().then(() => {
   routes.routes(app, db);
 
   io.on('connection', (socket) => {
-
-    if(chats.state == "success") {
-      socket.join(socket.request.user.username);
-      socket.emit('joined');
-    } else {
-      socket.emit('error');
-    }
+    console.log("connected");
+    
+    socket.join(socket.request.user.username);
+    socket.emit('joined');
 
     io.on('message', (data) => {
       console.log("message", data.message);
