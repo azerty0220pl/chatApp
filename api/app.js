@@ -72,7 +72,7 @@ db.connect().then(() => {
   routes.routes(app, db);
 
   io.on('connection', (socket) => {
-    console.log("connected");
+    console.log("connected", socket.id);
 
     socket.join(socket.request.user.username);
     socket.emit('joined');
