@@ -79,13 +79,21 @@ db.connect().then(() => {
 
     socket.on('message', (data, callback) => {
       console.log("message", data.message);
-      db.sendMessage(data.from, data.to, data.message).then(() => {
+      db.sendMessage(data.from, data.to, data.message).then((status) => {
 
         io.to(data.to).emit('message', data);
 
-        callback({
-          status: "success"
-        });
+        if(status.status === 'success') {
+          callback({
+            status: "success"
+          });
+        } else {
+          console.log(status.code);
+          callback({
+            status: "error"
+          });
+        }
+
       }).catch(err => {
         callback({
           status: "error"

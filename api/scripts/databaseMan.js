@@ -44,15 +44,20 @@ class dbMan {
     }
 
     async sendMessage(from, to, message) {
+        console.log("sending...")
         let res = null;
         await this.User.findOne({username: from}).then(async (sen) => {
             if(sen) {
+                console.log("found sender");
                 await this.User.findOne({username: to}).then(async (rec) => {
                     if(rec) {
+                        console.log("found receiver");
                         await this.Chat.findOne({$or: [{user1: sec.username, user2: ren.username}, {user1: ren.username, user2: sec.username}]}).then(async (chat) => {
                             if(!chat) {
+                                console.log("creating new chat");
                                 let x = new this.Chat({user1: sen.username, user2: rec.username, messages: [JSON.stringify({"sender": sen.username, "message": message, "date": new Date()})]});
                                 await x.save().then((doc) => {
+                                    console.log("chat saved");
                                     res = {status: "success"};
                                 }).catch((err) => {
                                     res = {status: "error", message: err, code: "004"};
