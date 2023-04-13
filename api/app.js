@@ -81,6 +81,7 @@ db.connect().then(() => {
     }
 
     io.on('message', (data) => {
+      console.log("message", data.message);
       db.sendMessage(data.from, data.to, data.message).then(x => {
         socket.emit('sent', {status: x.status});
         io.to(data.to).emit('message', data);
