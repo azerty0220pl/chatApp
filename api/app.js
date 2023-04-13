@@ -88,7 +88,7 @@ db.connect().then(() => {
             status: "success"
           });
         } else {
-          console.log(status.code);
+          console.log(status.code, status.err);
           callback({
             status: "error"
           });
