@@ -82,6 +82,7 @@ db.connect().then(() => {
       db.sendMessage(data.from, data.to, data.message).then((status) => {
 
         io.to(data.to).emit('message', data);
+        socket.emit('message', data);
 
         if(status.status === 'success') {
           callback({
