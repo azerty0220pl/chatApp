@@ -13,9 +13,26 @@ const socket = io('https://chatapp-api-6dvw.onrender.com', {
   transports: ['websocket']
 });
 
+let connected = false;
+
+socket.on('connect', () => {
+  connected = true;
+  console.log("connected")
+  console.log("id", socket.id);
+});
+
+socket.on('connect_error', () => {
+  connected = false;
+  console.log("connection error");
+});
+
+socket.on('connect_timeout', () => {
+  connected = false;
+  console.log("connection timed out");
+});
+
 const NEW_MESSAGE = 'NEW_MESSAGE';
 const CHANGE_CHAT = 'CHANGE_CHAT';
-const GET = 'GET';
 const LOGIN = 'LOGIN';
 const LOGOUT = 'LOGOUT';
 const RELOAD_CHATS = 'RELOAD_CHATS';
@@ -43,12 +60,6 @@ const changeChat = (nm) => {
   };
 }
 
-const get = () => {
-  return {
-    type: GET
-  };
-}
-
 const login = (username) => {
   return {
     type: LOGIN,
@@ -63,12 +74,14 @@ const logout = () => {
 }
 
 const reload = () => {
+  console.log("reload");
   return {
     type: RELOAD_CHATS
   };
 }
 
 const chats = (chats) => {
+  console.log("chats");
   return {
     type: CHATS,
     chats: chats
@@ -81,9 +94,9 @@ const reducer = (state = DEFAULT, action) => {
     case LOGIN:
       res = {
         ...state,
-        username: action.username
+        username: action.username,
+        loading: true
       };
-      reload();
       socket.connect();
       return res;
     case CHANGE_CHAT:
@@ -97,39 +110,38 @@ const reducer = (state = DEFAULT, action) => {
     case NEW_MESSAGE:
       console.log("sending message");
       res = { ...state };
-      socket.emit('message', {
-        from: res.username,
-        to: res.curName,
-        message: action.message
-      }, (response) => {
-        if (response.status === "error")
-          console.log("Not sent, server error");
-        else {
-          console.log("success");
-          reload();
-        }
-      });
+      if (connected) {
+        socket.emit('message', {
+          from: res.username,
+          to: res.curName,
+          message: action.message
+        }, (response) => {
+          if (response.status === "error")
+            console.log("Not sent, server error");
+          else {
+            console.log("success");
+          }
+        });
+      } else {
+        console.log("not connected to socket");
+      }
       return res;
     case RELOAD_CHATS:
       res = { ...state };
       res.loading = true;
-      axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + state.username, {
-        withCredentials: true,
-        headers: {
-          'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
-        }
-      }).then((data) => {
-        chats(data.data.chats);
-      });
       return res;
     case CHATS:
+      console.log("chats", action.chats);
       res = {
         ...state,
         loading: false,
         chats: action.chats
       };
-      if (res.curNum == -1 && res.chats.length > 0)
+      if (res.curNum === -1 && res.chats.length > 0) {
         res.curNum = 0;
+        res.curName = res.chats[0].user1 === res.username ? res.chats[0].user2 : res.chats[0].user1;
+      }
+      console.log("chats res", res);
       return res;
     default:
       return state;
@@ -137,6 +149,10 @@ const reducer = (state = DEFAULT, action) => {
 }
 
 const store = createStore(reducer, DEFAULT);
+
+socket.on('message', () => {
+  store.dispatch(reload());
+})
 
 class App extends React.Component {
   constructor(props) {
@@ -150,7 +166,8 @@ class App extends React.Component {
       logout: this.props.logout,
       sendMessage: this.props.sendMessage,
       login: this.props.login,
-      reload: this.props.reload
+      reload: this.props.reload,
+      loading: this.props.loading
     };
   }
 
@@ -160,7 +177,7 @@ class App extends React.Component {
 
   componentDidUpdate(prevProps) {
     console.log("updating state");
-    if (prevProps.chats !== this.props.chats || prevProps.username !== this.props.username || prevProps.curName !== this.props.curName || prevProps.curNum !== this.props.curNum) {
+    if (prevProps.chats !== this.props.chats || prevProps.username !== this.props.username || prevProps.curName !== this.props.curName || prevProps.curNum !== this.props.curNum || prevProps.loading !== this.props.loading) {
       this.setState({
         chats: this.props.chats,
         curName: this.props.curName,
@@ -170,8 +187,21 @@ class App extends React.Component {
         logout: this.props.logout,
         sendMessage: this.props.sendMessage,
         login: this.props.login,
-        reload: this.props.reload
+        reload: this.props.reload,
+        loading: this.props.loading
       });
+
+      if (this.props.loading) {
+        axios.get("https://chatapp-api-6dvw.onrender.com/chats?username=" + this.props.username, {
+          withCredentials: true,
+          headers: {
+            'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
+          }
+        }).then((data) => {
+          console.log(data.data.chats);
+          this.props.loadChats(data.data.chats);
+        });
+      }
     }
   }
 
@@ -203,7 +233,8 @@ const mapStateToProps = (state) => {
     username: state.username,
     chats: state.chats,
     curNum: state.curNum,
-    curName: state.curName
+    curName: state.curName,
+    loading: state.loading
   };
 };
 
@@ -225,6 +256,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     reload: () => {
       return dispatch(reload());
+    },
+    loadChats: (c) => {
+      return dispatch(chats(c));
     }
   };
 };

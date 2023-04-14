@@ -1,28 +1,35 @@
 import React from "react";
-import Axios from 'axios';
 
 class Contact extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            write: ''
+            write: '',
+            chats: this.props.chats
         }
 
         this.handleWrite = this.handleWrite.bind(this);
-        this.changeChat = this.changeChat.bind(this);
+        this.changeChat1 = this.changeChat1.bind(this);
+        this.changeChat2 = this.changeChat2.bind(this);
     }
 
     handleWrite(e) {
-        this.setState({write: e.target.value});
+        this.setState({ write: e.target.value });
     }
 
-    changeChat(e) {
+    changeChat1(e) {
+        console.log("state.write", this.state.write);
         this.props.changeChat(this.state.write);
-        this.setState({write: ''});
+        this.setState({ write: '' });
+    }
+
+    changeChat2(name) { 
+        this.props.changeChat(name);
     }
 
     render() {
+        console.log("rendering contact")
         return (
             <div className="d-flex flex-column">
                 <div>
@@ -31,15 +38,17 @@ class Contact extends React.Component {
                 </div>
                 <div className="d-flex">
                     <input type="text" className="form-control" onChange={this.handleWrite} />
-                    <button className="btn btn-primary rounded-pill" onClick={this.changeChat}>Write</button>
+                    <button className="btn btn-primary rounded-pill" onClick={this.changeChat1}>Write</button>
                 </div>
                 <div>
-                {
-                    this.props.chats.array.forEach(chat => {
-                        let name = chat.user1 === this.props.username ? chat.user2 : chat.user1;
-                        return <button className="btn" value={name} onClick={this.props.changeChat} />
-                    })
-                }
+                    <ul>
+                        {
+                            this.props.chats.length > 0 ? this.props.chats.map((chat, index) => {
+                                let name = chat.user1 === this.props.username ? chat.user2 : chat.user1;
+                                return <li key={index}><button className="btn bg-light" onClick={() => {this.changeChat2(name)}}>{name}</button></li>
+                            }) : <p>No contacts</p>
+                        }
+                    </ul>
                 </div>
             </div>
         );
