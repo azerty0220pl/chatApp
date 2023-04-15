@@ -72,16 +72,23 @@ class Chat extends React.Component {
 
     render() {
         return (
-            <div className="d-flex align-items-between w-75">
-                <div>
-                    <h1>{this.props.curName}</h1>
+            <div className="d-flex flex-column justify-content-between w-75 h-100 card">
+                <div className="d-flex justify-content-center align-items-center card-header">
+                    <h4 className="text-center m-0">{this.props.curName}</h4>
                 </div>
-                <div>
-                    <ul>
+                <div className="d-flex flex-column-reverse h-100 overflow-auto">
+                    <ul className="list-group list-group-flush">
                         {
-                            this.state.chat === null ? <p className="text-center">No messages</p> :
+                            this.state.chat === null ? <li className="group-list-items text-center">No messages</li> :
                                 this.state.message.map((m, index) => {
-                                    return <li key={index}><div className={m.sender === this.props.username ? "bg-primary" : "bg-secondary"}><h6>{m.message}</h6><p>{m.date}</p></div></li>;
+                                    return <li className="list-group-item" key={index}>
+                                            <div className={"w-100 d-flex align-items-center justify-content-" + (m.sender === this.props.username ? "end" : "start")}>
+                                                <div style={{"max-width": "75%"}} className={m.sender === this.props.username ? "card bg-primary" : "card bg-light"}>
+                                                    <p className="fw-bold text-start mx-2 my-0">{m.message}</p>
+                                                    <p className="mx-3 my-0 text-end">{new Date(m.date).toLocaleDateString()}</p>
+                                                </div>
+                                            </div>
+                                        </li>;
                                 })
                         }
                     </ul>

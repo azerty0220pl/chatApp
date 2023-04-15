@@ -35,7 +35,7 @@ class Logged extends React.Component {
 
     render() {
         return (
-            <div id="logged" className="card d-flex flex-row h-75 w-75 justify-content-evenly">
+            <div id="logged" className="d-flex flex-row h-75 w-75 justify-content-evenly">
                 <Contact
                     chats={this.state.chats}
                     curNum={this.state.curNum}
@@ -44,7 +44,6 @@ class Logged extends React.Component {
                     changeChat={this.state.changeChat}
                     logout={this.state.logout}
                     reload={this.state.reload} />
-                <div className="border-end m-1" />
                 <Chat
                     chats={this.state.chats}
                     curNum={this.state.curNum}
