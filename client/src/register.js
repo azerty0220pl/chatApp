@@ -40,8 +40,6 @@ class Register extends React.Component {
     async handleRegister (e) {
         let user = this.state.username;
         let password = this.state.password;
-        
-        e.target.className = "btn btn-success w-50 my-2 disabled"
 
         if(this.state.password === this.state.rePassword && this.state.password !== '') {
             await Axios({
@@ -70,8 +68,6 @@ class Register extends React.Component {
                 console.log(err);
             });
         }
-
-        e.target.className = "btn btn-success w-50 my-2"
     }
     render() {
         return (
@@ -90,7 +86,7 @@ class Register extends React.Component {
                     </div>
                     <div>
                         <label className="form-label" htmlFor="passwordRep">Repeat password:</label>
-                        <input type="password" id="passwordRep" className="form-control" onChange={this.onRePassChange} value={this.state.rePassword} />
+                        <input type="password" id="passwordRep" className="form-control" onChange={this.onRePassChange} value={this.state.rePassword} onKeyUp={e => { if (e.key === 'Enter') this.handleRegister()}} />
                         <p className="form-text text-danger">{this.state.passEq ? '' : 'Password must match'}</p>
                     </div>
                     <button onClick={this.handleRegister} className="btn btn-success w-50 my-2">Register</button>

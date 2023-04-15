@@ -33,13 +33,6 @@ class Chat extends React.Component {
         this.updateMsg = this.updateMsg.bind(this);
     }
 
-    shouldComponentUpdate(nextProps, nextState){
-        if(nextState.toSend !== this.state.toSend) {
-            return false;
-        }
-        return true;
-    }
-
     componentDidUpdate(prevProps) {
         if (this.props.chats !== prevProps.chats || this.props.curName !== prevProps.curName) {
             let chat = null;
@@ -93,8 +86,8 @@ class Chat extends React.Component {
                         }
                     </ul>
                 </div>
-                <div className="d-flex w-100">
-                    <input type="text" className="form-control" onChange={this.updateMsg} value={this.state.toSend} />
+                <div className="d-flex jusitfy-content-between card-footer">
+                    <input type="text" className="form-control" onChange={this.updateMsg} value={this.state.toSend} onKeyUp={e => { if (e.key === 'Enter') this.send()}} />
                     <button className="btn btn-primary rounded-pill mx-1" onClick={this.send}>Send</button>
                 </div>
             </div>

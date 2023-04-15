@@ -28,7 +28,6 @@ class Login extends React.Component {
         let user = this.state.username;
         let password = this.state.password;
 
-        e.target.className = "btn btn-success w-50 my-2 disabled";
         await Axios({
             method: 'POST',
             withCredentials: true,
@@ -55,8 +54,6 @@ class Login extends React.Component {
         }).catch(err => {
             console.log(err);
         });
-
-        e.target.className = "btn btn-success w-50 my-2";
     }
 
     render() {
@@ -82,7 +79,8 @@ class Login extends React.Component {
                             id="password"
                             className="form-control"
                             onChange={this.onPassChange}
-                            value={this.state.password} />
+                            value={this.state.password}
+                            onKeyUp={e => { if (e.key === 'Enter') this.handleLogin()}} />
                     </div>
                     <p className="form-text text-danger">{this.state.error ? "Invalid credentials" : ""}</p>
                     <button
