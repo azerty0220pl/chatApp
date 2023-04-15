@@ -44,7 +44,7 @@ class Register extends React.Component {
         
         e.target.className = "btn btn-success w-50 my-2 disabled"
 
-        if(this.state.password === this.state.rePassword) {
+        if(this.state.password === this.state.rePassword && this.state.password !== '') {
             await Axios({
                 method: 'POST',
                 withCredentials: true,
