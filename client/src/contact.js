@@ -32,21 +32,21 @@ class Contact extends React.Component {
         console.log("rendering contact")
         return (
             <div className="d-flex flex-column">
-                <div>
-                    <h2>{this.props.username}</h2>
-                    <button className="btn btn-danger rounded-pill" onClick={this.props.logout}>LogOut</button>
+                <div className="d-flex flex-row justify-content-between">
+                    <h3>{this.props.username}</h3>
+                    <button className="btn btn-danger rounded-pill" onClick={this.props.logout}>X</button>
                 </div>
-                <div className="d-flex">
-                    <input type="text" className="form-control" onChange={this.handleWrite} />
+                <div className="d-flex flex-row justify-content-between">
+                    <input type="text" className="form-control" onChange={this.handleWrite} value={this.state.write} />
                     <button className="btn btn-primary rounded-pill" onClick={this.changeChat1}>Write</button>
                 </div>
                 <div>
-                    <ul>
+                    <ul className="list-group list-group-flush">
                         {
                             this.props.chats.length > 0 ? this.props.chats.map((chat, index) => {
                                 let name = chat.user1 === this.props.username ? chat.user2 : chat.user1;
-                                return <li key={index}><button className="btn bg-light" onClick={() => {this.changeChat2(name)}}>{name}</button></li>
-                            }) : <p>No contacts</p>
+                                return <li className="list-group-item" key={index}><button className="w-100" onClick={() => {this.changeChat2(name)}}>{name}</button></li>
+                            }) : <li className="list-group-item">No contacts</li>
                         }
                     </ul>
                 </div>

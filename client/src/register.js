@@ -81,17 +81,17 @@ class Register extends React.Component {
                 <div className="d-flex flex-column align-items-center">
                     <div>
                         <label className="form-label" htmlFor="newUsername">Username:</label>
-                        <input type="text" id="newUsername" className="form-control" onChange={this.onUserChange} />
+                        <input type="text" id="newUsername" className="form-control" onChange={this.onUserChange} value={this.state.username} />
                         <p className={"form-text" + (this.state.error ? " text-danger" : "")}>Must be unique</p>
                     </div>
                     <div>
                         <label className="form-label" htmlFor="newPassword">Password:</label>
-                        <input type="password" id="newPassword" className="form-control" onChange={this.onPassChange} />
+                        <input type="password" id="newPassword" className="form-control" onChange={this.onPassChange} value={this.state.password} />
                         <p className="form-text">Should be a strong one</p>
                     </div>
                     <div>
                         <label className="form-label" htmlFor="passwordRep">Repeat password:</label>
-                        <input type="password" id="passwordRep" className="form-control" onChange={this.onRePassChange} />
+                        <input type="password" id="passwordRep" className="form-control" onChange={this.onRePassChange} value={this.state.rePassword} />
                         <p className="form-text text-danger">{this.state.passEq ? '' : 'Password must match'}</p>
                     </div>
                     <button onClick={this.handleRegister} className="btn btn-success w-50 my-2">Register</button>

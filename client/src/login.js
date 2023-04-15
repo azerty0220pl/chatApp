@@ -73,7 +73,8 @@ class Login extends React.Component {
                                 type="text"
                                 id="username"
                                 className="form-control"
-                                onChange={this.onUserChange} />
+                                onChange={this.onUserChange}
+                                value={this.state.username} />
                         </div>
                     </div>
                     <div>
@@ -82,7 +83,8 @@ class Login extends React.Component {
                             type="password"
                             id="password"
                             className="form-control"
-                            onChange={this.onPassChange} />
+                            onChange={this.onPassChange}
+                            value={this.state.password} />
                     </div>
                     <p className="form-text text-danger">{this.state.error ? "Invalid credentials" : ""}</p>
                     <button
