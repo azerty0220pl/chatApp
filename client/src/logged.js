@@ -19,8 +19,6 @@ class Logged extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log("prev", prevProps);
-        console.log("cur", this.props);
         if (prevProps.chats !== this.props.chats || prevProps.username !== this.props.username || prevProps.curName !== this.props.curName || prevProps.curNum !== this.props.curNum) {
             this.setState({
                 chats: this.props.chats,
@@ -36,7 +34,6 @@ class Logged extends React.Component {
     }
 
     render() {
-        console.log("rendering logged")
         return (
             <div id="logged" className="card d-flex flex-row h-75 w-75 justify-content-evenly">
                 <Contact

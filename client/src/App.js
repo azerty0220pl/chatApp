@@ -17,18 +17,14 @@ let connected = false;
 
 socket.on('connect', () => {
   connected = true;
-  console.log("connected")
-  console.log("id", socket.id);
 });
 
 socket.on('connect_error', () => {
   connected = false;
-  console.log("connection error");
 });
 
 socket.on('connect_timeout', () => {
   connected = false;
-  console.log("connection timed out");
 });
 
 const NEW_MESSAGE = 'NEW_MESSAGE';
@@ -74,14 +70,12 @@ const logout = () => {
 }
 
 const reload = () => {
-  console.log("reload");
   return {
     type: RELOAD_CHATS
   };
 }
 
 const chats = (chats) => {
-  console.log("chats");
   return {
     type: CHATS,
     chats: chats
@@ -100,7 +94,6 @@ const reducer = (state = DEFAULT, action) => {
       socket.connect();
       return res;
     case CHANGE_CHAT:
-      console.log("change chat", action.name);
       return {
         ...state,
         curName: action.name
@@ -108,7 +101,6 @@ const reducer = (state = DEFAULT, action) => {
     case LOGOUT:
       return DEFAULT;
     case NEW_MESSAGE:
-      console.log("sending message");
       res = { ...state };
       if (connected) {
         socket.emit('message', {
@@ -123,7 +115,6 @@ const reducer = (state = DEFAULT, action) => {
           }
         });
       } else {
-        console.log("not connected to socket");
       }
       return res;
     case RELOAD_CHATS:
@@ -131,7 +122,6 @@ const reducer = (state = DEFAULT, action) => {
       res.loading = true;
       return res;
     case CHATS:
-      console.log("chats", action.chats);
       res = {
         ...state,
         loading: false,
@@ -141,7 +131,6 @@ const reducer = (state = DEFAULT, action) => {
         res.curNum = 0;
         res.curName = res.chats[0].user1 === res.username ? res.chats[0].user2 : res.chats[0].user1;
       }
-      console.log("chats res", res);
       return res;
     default:
       return state;
@@ -171,12 +160,7 @@ class App extends React.Component {
     };
   }
 
-  componentDidMount() {
-    console.log("mounted", this.state);
-  }
-
   componentDidUpdate(prevProps) {
-    console.log("updating state");
     if (prevProps.chats !== this.props.chats || prevProps.username !== this.props.username || prevProps.curName !== this.props.curName || prevProps.curNum !== this.props.curNum || prevProps.loading !== this.props.loading) {
       this.setState({
         chats: this.props.chats,
@@ -198,7 +182,6 @@ class App extends React.Component {
             'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
           }
         }).then((data) => {
-          console.log(data.data.chats);
           this.props.loadChats(data.data.chats);
         });
       }
@@ -206,7 +189,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.props.username + " logged");
     return (
       <div className='container-fluid d-flex flex-column align-items-center justify-content-center w-100 h-100'>
         {
@@ -227,8 +209,6 @@ class App extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log("mappingStateToProps");
-  console.log(state);
   return {
     username: state.username,
     chats: state.chats,
@@ -244,14 +224,12 @@ const mapDispatchToProps = (dispatch) => {
       return dispatch(login(username));
     },
     changeChat: (user) => {
-      console.log("user", user);
       return dispatch(changeChat(user));
     },
     logout: () => {
       return dispatch(logout());
     },
     sendMessage: (msg) => {
-      console.log("message", msg);
       return dispatch(sendMessage(msg));
     },
     reload: () => {

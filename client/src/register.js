@@ -38,7 +38,6 @@ class Register extends React.Component {
     }
 
     async handleRegister (e) {
-        console.log("handle Register");
         let user = this.state.username;
         let password = this.state.password;
         

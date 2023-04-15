@@ -19,7 +19,6 @@ class Contact extends React.Component {
     }
 
     changeChat1(e) {
-        console.log("state.write", this.state.write);
         this.props.changeChat(this.state.write);
         this.setState({ write: '' });
     }
@@ -29,7 +28,6 @@ class Contact extends React.Component {
     }
 
     render() {
-        console.log("rendering contact")
         return (
             <div className="d-flex flex-column">
                 <div className="d-flex flex-row justify-content-between">

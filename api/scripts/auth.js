@@ -5,14 +5,11 @@ const bcrypt = require('bcrypt');
 module.exports = {
     auth: function(db) {
         passport.serializeUser((user, done) => {
-            console.log("serializeUser", user);
             done(null, user);
         });
 
         passport.deserializeUser((id, done) => {
-            console.log("deserialize id", id);
             db.getUser(id).then(doc => {
-                console.log("deserialize", doc);
                 done(null, doc.user);
             });
         });

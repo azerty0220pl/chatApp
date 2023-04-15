@@ -5,15 +5,12 @@ class Chat extends React.Component {
         super(props);
 
         let chat = null;
-        console.log("chat chats", this.props.chats, this.props.curName);
         if (this.props.chats.length > 0) {
             this.props.chats.forEach(c => {
                 if (c.user1 === this.props.curName || c.user2 === this.props.curName)
                     chat = c;
             });
         }
-
-        console.log("chat chat", chat)
 
         let message = null;
         if (chat !== null)
@@ -68,7 +65,6 @@ class Chat extends React.Component {
                 chat: chat,
                 message: message
             });
-            console.log("chat update", this.state);
         }
     }
 
@@ -82,7 +78,6 @@ class Chat extends React.Component {
     }
 
     render() {
-        console.log("rendering chat", this.state);
         return (
             <div className="d-flex align-items-between w-75">
                 <div>
@@ -93,7 +88,6 @@ class Chat extends React.Component {
                         {
                             this.state.chat === null ? <p className="text-center">No messages</p> :
                                 this.state.message.map((m, index) => {
-                                    console.log(m.message, m.date, m);
                                     return <li key={index}><div className={m.sender === this.props.username ? "bg-primary" : "bg-secondary"}><h6>{m.message}</h6><p>{m.date}</p></div></li>;
                                 })
                         }

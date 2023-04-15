@@ -29,7 +29,6 @@ class Login extends React.Component {
         let password = this.state.password;
 
         e.target.className = "btn btn-success w-50 my-2 disabled";
-        console.log("handle login");
         await Axios({
             method: 'POST',
             withCredentials: true,
@@ -39,7 +38,6 @@ class Login extends React.Component {
             data: "username=" + encodeURI(user) + "&password=" + encodeURI(password),
             url: 'https://chatapp-api-6dvw.onrender.com/login'
         }).then(res => {
-            console.log(res);
             if (res.data.status === "success") {
                 this.props.login(this.state.username);
                 this.setState({

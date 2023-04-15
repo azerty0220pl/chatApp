@@ -8,9 +8,6 @@ module.exports = {
             res.header('Access-Control-Allow-Origin', 'https://azerty0220pl.github.io');
             res.header('Access-Control-Allow-Credentials', true);
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-        
-            console.log("login 1", req.sessionID);
-            console.log("login 2", req.session);
 
             res.json({ "status": "success", "user": req.user });
         }, (err, req, res) => {
@@ -59,13 +56,9 @@ function ensureAuthenticated(req, res, next) {
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 
-    console.log("ensure 1", req.sessionID);
-
     if (req.isAuthenticated()) {
         return next();
     }
-
-    console.log("ensure 2", req.session);
 
     res.json({ "status": "error", "message": "No user authenticated", "code": "106" });
 };

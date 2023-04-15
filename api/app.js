@@ -72,13 +72,11 @@ db.connect().then(() => {
   routes.routes(app, db);
 
   io.on('connection', (socket) => {
-    console.log("connected", socket.id);
 
     socket.join(socket.request.user.username);
     socket.emit('joined');
 
     socket.on('message', (data, callback) => {
-      console.log("message", data.message);
       db.sendMessage(data.from, data.to, data.message).then((status) => {
 
         io.to(data.to).emit('message', data);
@@ -89,7 +87,6 @@ db.connect().then(() => {
             status: "success"
           });
         } else {
-          console.log(status.code, status.message);
           callback({
             status: "error"
           });
@@ -107,12 +104,10 @@ db.connect().then(() => {
 });
 
 function onAuthorizeSuccess(data, accept) {
-  console.log('successful connection');
   accept(null, true);
 }
 
 function onAuthorizeFail(data, message, error, accept) {
-  console.log('failed connection', message);
   accept(null, false);
 }
 
