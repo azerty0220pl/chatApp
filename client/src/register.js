@@ -38,7 +38,7 @@ class Register extends React.Component {
     }
 
     async handleRegister (e) {
-        console.log("handleLogin");
+        console.log("handle Register");
         let user = this.state.username;
         let password = this.state.password;
         
@@ -53,7 +53,7 @@ class Register extends React.Component {
                   'Access-Control-Allow-Origin': 'https://azerty0220pl.github.io'
                 },
                 data: "username=" + encodeURI(user) + "&password=" + encodeURI(password),
-                url: 'https://chatapp-api-6dvw.onrender.com/login'
+                url: 'https://chatapp-api-6dvw.onrender.com/register'
             }).then(res => {
                 if(res.data.status === "success") {
                     this.setState({
