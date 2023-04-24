@@ -71,7 +71,7 @@ class Register extends React.Component {
     }
     render() {
         return (
-            <div className="d-flex flex-column align-items-center">
+            <div className="d-flex flex-column align-items-center col">
                 <h3 className="text-center">Register:</h3>
                 <div className="d-flex flex-column align-items-center">
                     <div>

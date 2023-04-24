@@ -58,7 +58,7 @@ class Login extends React.Component {
 
     render() {
         return (
-            <div className="d-flex flex-column justify-content-center">
+            <div className="d-flex flex-column justify-content-center col">
                 <h3 className="text-center">Log in:</h3>
                 <div className="d-flex flex-column align-items-center">
                     <div>
