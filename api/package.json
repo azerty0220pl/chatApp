@@ -2,7 +2,9 @@
   "name": "api",
   "author": {
     "name": "Szymon Kokot",
-    "website": "azerty0220pl.github.io/portfolio/"
+    "portfolio": "azerty0220pl.github.io/portfolio/",
+    "linkedin": "",
+    "contact": "szmnkokot@gmail.com"
   },
   "version": "1.0.1",
   "private": false,
